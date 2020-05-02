@@ -96,19 +96,19 @@
 
     <!-- FILTER : ХАЙЛТ -->
     <div class="box_general padding_bottom">
-    {% if request.user.is_staff %}
       <div class="header_box version_2">
-        <h2 id="chart_title"><i class="fa fa-bar-chart"></i>Бүртгүүлсэн хэрэглэгчид</h2>
-          <div style="float: right;" class="form-group">
-            <select class="form-control choice" id="sel1">
-              <option>Хэрэглэгч</option>
-              <option>Төхөөрөмж</option>
-            </select>
-          </div>
+        {% if request.user.is_staff %}
+            <h2 id="chart_title"><i class="fa fa-bar-chart"></i>Бүртгүүлсэн хэрэглэгчид</h2>
+              <div style="float: right;" class="form-group">
+                <select class="form-control choice" id="sel1">
+                  <option>Хэрэглэгч</option>
+                  <option>Төхөөрөмж</option>
+                </select>
+              </div>
+        {% else %}
+          {% include "includes/customer_user_filter.html" %}
+        {% endif %}
       </div>
-    {% else %}
-
-    {% endif %}
      <canvas id="myAreaChart" width="100%" height="30" style="margin:45px 0 15px 0;"></canvas>
     </div>
   </div>
@@ -212,9 +212,9 @@
       // Сар, тухайн өдөр
       // Төхөөрөмж эсвэл Хэрэглэгч
       $(document).ready(function(){
-        $("select.choice").change(function(){
+        $("select.devices").change(function(){
             var selectedChoice = $(this).children("option:selected").val();
-            if(selectedChoice === "Сараар") {
+            if(selectedChoice === "Сар") {
               $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл сараар"
               myLineChart = new Chart(ctx, {
                 type: 'line',
@@ -238,7 +238,7 @@
                 },
                 options: myLineChart.options
               });
-            } else if (selectedChoice === "Өдрөөр") {
+            } else if (selectedChoice === "Өдөр") {
               $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл өдрөөр"
               myLineChart = new Chart(ctx, {
                 type: 'line',
