@@ -93,8 +93,10 @@
         {% endif %}
     </div>
     <!-- /cards -->
-    <h2></h2>
+
+    <!-- FILTER : ХАЙЛТ -->
     <div class="box_general padding_bottom">
+    {% if request.user.is_staff %}
       <div class="header_box version_2">
         <h2 id="chart_title"><i class="fa fa-bar-chart"></i>Бүртгүүлсэн хэрэглэгчид</h2>
           <div style="float: right;" class="form-group">
@@ -104,6 +106,9 @@
             </select>
           </div>
       </div>
+    {% else %}
+
+    {% endif %}
      <canvas id="myAreaChart" width="100%" height="30" style="margin:45px 0 15px 0;"></canvas>
     </div>
   </div>
@@ -116,22 +121,15 @@
   <script src="{% static "dashboard/js/jquery.nice-select.js" %}"></script>
   <script type="text/javascript">
     var myLineChart;
-    $(document).ready(function(){
-      $("select.country").change(function(){
-          var selectedChoice = $(this).children("option:selected").val();
-          if(selectedChoice === "Төхөөрөмж") {
+    var ctx = document.getElementById("myAreaChart");
 
-          }
-      });
-    });
     Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
     Chart.defaults.global.defaultFontColor = '#292b2c';
     is_user_staff = ($("#is_userstaff").attr('value')).toString()
 
-    var ctx = document.getElementById("myAreaChart");
-
+    // Бүртгүүлсэн хэрэглэгчдийн тоог сар сараар харуулах
     if($("#is_userstaff").attr('value') === 'customer') {
-      $("#chart_title")[0].innerText = "Төхөөрөмжөөс ирсэн дохиолол"
+      $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл сараар"
       myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -210,106 +208,196 @@
           }
         }
       });
-    } else if($("#is_userstaff").attr('value') === 'admin') {
-        myLineChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
-            datasets: [{
-              label: "Хэрэглэгч",
-              lineTension: 0.3,
-              backgroundColor: "rgba(2,117,216,0.2)",
-              borderColor: "rgba(2,117,216,1)",
-              pointRadius: 5,
-              pointBackgroundColor: "rgba(2,117,216,1)",
-              pointBorderColor: "rgba(255,255,255,0.8)",
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: "rgba(2,117,216,1)",
-              pointHitRadius: 20,
-              pointBorderWidth: 2,
-              data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
-                    {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
-            }],
-          },
-          options: {
-            scales: {
-              xAxes: [{
-                time: {
-                  unit: 'date'
+
+      // Сар, тухайн өдөр
+      // Төхөөрөмж эсвэл Хэрэглэгч
+      $(document).ready(function(){
+        $("select.choice").change(function(){
+            var selectedChoice = $(this).children("option:selected").val();
+            if(selectedChoice === "Сараар") {
+              $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл сараар"
+              myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+                  datasets: [{
+                    label: "Төхөөрөмж",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2,
+                    data: [{{"1"|getDeviceCountMonth}}, {{"2"|getDeviceCountMonth}}, {{"3"|getDeviceCountMonth}}, {{"4"|getDeviceCountMonth}}, {{"5"|getDeviceCountMonth}}, {{"6"|getDeviceCountMonth}}, {{"7"|getDeviceCountMonth}},
+                          {{"8"|getDeviceCountMonth}}, {{"9"|getDeviceCountMonth}}, {{"10"|getDeviceCountMonth}}, {{"11"|getDeviceCountMonth}}, {{"12"|getDeviceCountMonth}}],
+                  }],
                 },
-                gridLines: {
-                  display: false
+                options: myLineChart.options
+              });
+            } else if (selectedChoice === "Өдрөөр") {
+              $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл өдрөөр"
+              myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+                  datasets: [{
+                    label: "Анхааруулга",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2,
+                    data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
+                          {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
+                  }],
                 },
-                ticks: {
-                  maxTicksLimit: 7
-                }
-              }],
-              yAxes: [{
-                ticks: {
-                  min: 0,
-                  max: 50,
-                  maxTicksLimit: 5
+                options: myLineChart.options
+              });
+            } else if (selectedChoice === "Өнөөдөр") {
+              myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+                  datasets: [{
+                    label: "Анхааруулга",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2,
+                    data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
+                          {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
+                  }],
                 },
-                gridLines: {
-                  color: "rgba(0, 0, 0, .125)",
-                }
-              }],
-            },
-            legend: {
-              display: false
+                options: myLineChart.options
+              });
             }
-          }
         });
-    }
-    myLineChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ["2 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
-        datasets: [{
-          label: "Хэрэглэгч",
-          lineTension: 0.3,
-          backgroundColor: "rgba(2,117,216,0.2)",
-          borderColor: "rgba(2,117,216,1)",
-          pointRadius: 5,
-          pointBackgroundColor: "rgba(2,117,216,1)",
-          pointBorderColor: "rgba(255,255,255,0.8)",
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: "rgba(2,117,216,1)",
-          pointHitRadius: 20,
-          pointBorderWidth: 2,
-          data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
-                {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
-        }],
-      },
-      options: {
-        scales: {
-          xAxes: [{
-            time: {
-              unit: 'date'
-            },
-            gridLines: {
-              display: false
-            },
-            ticks: {
-              maxTicksLimit: 7
-            }
-          }],
-          yAxes: [{
-            ticks: {
-              min: 0,
-              max: 50,
-              maxTicksLimit: 5
-            },
-            gridLines: {
-              color: "rgba(0, 0, 0, .125)",
-            }
+      });
+
+
+    } else if($("#is_userstaff").attr('value') === 'admin') {
+      myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+          datasets: [{
+            label: "Хэрэглэгч",
+            lineTension: 0.3,
+            backgroundColor: "rgba(2,117,216,0.2)",
+            borderColor: "rgba(2,117,216,1)",
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(2,117,216,1)",
+            pointBorderColor: "rgba(255,255,255,0.8)",
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+            pointHitRadius: 20,
+            pointBorderWidth: 2,
+            data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
+                  {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
           }],
         },
-        legend: {
-          display: false
+        options: {
+          scales: {
+            xAxes: [{
+              time: {
+                unit: 'date'
+              },
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                maxTicksLimit: 7
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 50,
+                maxTicksLimit: 5
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, .125)",
+              }
+            }],
+          },
+          legend: {
+            display: false
+          }
         }
-      }
-    })
+      });
+
+
+      // Төхөөрөмж эсвэл Хэрэглэгч
+      $(document).ready(function(){
+        $("select.choice").change(function(){
+            var selectedChoice = $(this).children("option:selected").val();
+            if(selectedChoice === "Төхөөрөмж") {
+              $("#chart_title")[0].innerText = "Бүртгэлтэй төхөөрөмжүүд"
+              myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+                  datasets: [{
+                    label: "Төхөөрөмж",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2,
+                    data: [{{"1"|getDeviceCountMonth}}, {{"2"|getDeviceCountMonth}}, {{"3"|getDeviceCountMonth}}, {{"4"|getDeviceCountMonth}}, {{"5"|getDeviceCountMonth}}, {{"6"|getDeviceCountMonth}}, {{"7"|getDeviceCountMonth}},
+                          {{"8"|getDeviceCountMonth}}, {{"9"|getDeviceCountMonth}}, {{"10"|getDeviceCountMonth}}, {{"11"|getDeviceCountMonth}}, {{"12"|getDeviceCountMonth}}],
+                  }],
+                },
+                options: myLineChart.options
+              });
+            } else if (selectedChoice === "Хэрэглэгч") {
+              $("#chart_title")[0].innerText = "Бүртгэлтэй хэрэглэгчид"
+              myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+                  datasets: [{
+                    label: "Хэрэглэгч",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(2,117,216,0.2)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 5,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2,
+                    data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
+                          {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
+                  }],
+                },
+                options: myLineChart.options
+              });
+            }
+        });
+      });
+    }
   </script>
   <script src="{% static "dashboard/js/admin-charts.js"%}"></script>
 {% endblock javascripts%}

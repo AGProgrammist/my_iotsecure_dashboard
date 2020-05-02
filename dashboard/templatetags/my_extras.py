@@ -36,7 +36,18 @@ def getUserCount(month):
                                 'AND YEAR(p.created_at) = ' + str(today.year) +
                                 ' AND MONTH(p.created_at) = ' + month)
     return len(user_list)
+@register.filter(name="getDeviceCountMonth")
+def getDeviceCountMonth(month):
+    """
+    Тухайн сард бүртгэсэн төхөөрөмжийн тоог буцаана.
+    """
+    today = datetime.now()
 
+    device_list = Device.objects.raw('SELECT * FROM dashboard_device' +
+                                    ' WHERE deleted=False ' +
+                                    'AND YEAR(created_at) = ' + str(today.year) +
+                                    ' AND MONTH(created_at) = ' + month)
+    return len(device_list)
 
 @register.filter(name="getDeviceCount")
 def getDeviceCount(u_id):
@@ -72,3 +83,12 @@ def getCommonMsgCount(u_id):
         alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=2)
         counter = counter + len(alert)
     return counter
+
+@register.filter(name="getCurrentUserDevices")
+def getCurrentUserDevices(u_id):
+    """
+    params: u_id - хэрэглэгчийн дугаар
+    Тухайн хэрэглэгч дээр бүртгэлтэй төхөөрөмжүүдийн кодыг буцаана.
+    """
+    device_names = Device.objects.values_list("code", flat=True).filter(owner_id = int(u_id))
+    return device_names
