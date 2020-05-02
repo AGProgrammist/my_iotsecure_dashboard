@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static "users/css/vendors.css"%}">
+  <link rel="stylesheet" href="{% static "users/css/style.css"%}">
+  <link rel="stylesheet" href="{% static "iotsecure/css/styles.css"%}">
+  <!-- Font Awesome -->
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+{% endblock stylesheets %}
+
+{% block content %}
+<br />
+<br />
+<br />
+  <div class="content-wrapper">
+    <div class="container-fluid">
+    <form enctype="multipart/form-data" method="POST">
+      {% csrf_token %}
+      <div class="box_general padding_bottom">
+        <div class="header_box version_2">
+          <h2><i class="fa fa-user"></i>Хэрэглэгч бүртгэх</h2>
+        </div>
+          <div id="page" class="theia-exception">
+            <main>
+            <div class="bg_color_1">
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-8">
+                    <div class="box_cart">
+                    <div class="form_title">
+                      <h3>Хэрэглэгчийн мэдээлэл</h3>
+                    </div>
+                    <div class="step">
+                      <div class="row">
+                        <div class="col-md-8">
+                          {% if messages %}
+                            {% for message in messages %}
+                              <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                              </div>
+                            {% endfor %}
+                          {% endif %}
+                        </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{u_form.username.label_tag}}
+                          {% if u_form.username.errors %}
+                            {% render_field u_form.username class="form-control is-invalid" placeholder="Хэрэглэгчийн нэр"%}
+                            <small class="form-text" style="color: #d14734">
+                              <ul>
+                                <li>Хэрэглэгчийн нэр бүртгэгдсэн байна</li>
+                              </ul>
+                            </small>
+                          {% else %}
+                            {% render_field u_form.username class="form-control" placeholder="Хэрэглэгчийн нэр"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{u_form.email.label_tag}}
+                          {% if u_form.email.errors %}
+                            {% render_field u_form.email class="form-control is-invalid" placeholder="Хэрэглэгчийн и-мэйл"%}
+                            <small class="form-text" style="color: #d14734">
+                              <ul>
+                                <li>И-мэйл хаягаа шалгана уу</li>
+                              </ul>
+                            </small>
+                          {% else %}
+                            {% render_field u_form.email class="form-control" placeholder="Хэрэглэгчийн и-мэйл"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{u_form.password1.label_tag}}
+                          {% if u_form.password1.errors %}
+                            {% render_field u_form.password1 class="form-control is-invalid" placeholder="Нууц үг"%}
+                          {% else %}
+                            {% render_field u_form.password1 class="form-control" placeholder="Нууц үг"%}
+                          {% endif %}
+                          {% if u_form.password1.help_text %}
+                            <small class="form-text" style="color: blue">Таны нууц үг тоо болон үсэгнээс бүрдсэн 8 -аас олон тэмдэгт байх ёстой. </small>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{u_form.password2.label_tag}}
+                          {% if u_form.password2.errors %}
+                            {% render_field u_form.password2 class="form-control is-invalid" placeholder="Баталгаажуулах нууц үг"%}
+                            <small class="form-text" style="color: #d14734">
+                              <ul>
+                                <li>Эхний нууц үгээ давтан оруулна уу</li>
+                              </ul>
+                            </small>
+                          {% else %}
+                            {% render_field u_form.password2 class="form-control" placeholder="Баталгаажуулах нууц үг"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    </div>
+                    <hr>
+                    <!--End step -->
+                  </aside>
+                </div>
+                <!-- /row -->
+              </div>
+                <div class="row">
+                  <div class="col-lg-8">
+                    <div class="box_cart">
+                    <div class="form_title">
+                      <h3>Хувийн мэдээлэл</h3>
+                    </div>
+                    <div class="step">
+                      <!--
+                      {{ p_form.errors }}
+                      {{ p_form.non_field_errors }}
+                      !-->
+                      <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{p_form.lastname.label_tag}}
+                          {% if p_form.lastname.errors %}
+                            {% render_field p_form.lastname class="form-control is-invalid" placeholder="Овог"%}
+                          {% else %}
+                            {% render_field p_form.lastname class="form-control" placeholder="Овог"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{p_form.firstname.label_tag}}
+                          {% if p_form.firstname.errors %}
+                            {% render_field p_form.firstname class="form-control is-invalid" placeholder="Нэр"%}
+                          {% else %}
+                            {% render_field p_form.firstname class="form-control" placeholder="Нэр"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{p_form.identity_num.label_tag}}
+                          {% if p_form.identity_num.errors %}
+                            {% render_field p_form.identity_num class="form-control is-invalid" placeholder="Регистрийн дугаар"%}
+                            <small class="form-text" style="color: blue">Регистрийн дугаар давхардаж байна</small>
+                          {% else %}
+                            {% render_field p_form.identity_num class="form-control" placeholder="Регистрийн дугаар"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{p_form.birth.label_tag}}
+                          {% if p_form.gender.errors %}
+                            {% render_field p_form.birth type="date" class="form-control is-invalid"%}
+                          {% else %}
+                            {% render_field p_form.birth type="date" class="form-control"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{p_form.gender.label_tag}}
+                          {% if p_form.gender.errors %}
+                            {% render_field p_form.gender class="form-control is-invalid"%}
+                          {% else %}
+                            {% render_field p_form.gender class="form-control"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          {{p_form.phone_num.label_tag}}
+                          {% if p_form.phone_num.errors %}
+                            {% render_field p_form.phone_num class="form-control is-invalid", placeholder="Утасны дугаар"%}
+                          {% else %}
+                            {% render_field p_form.phone_num class="form-control", placeholder="Утасны дугаар"%}
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+          						<div class="col-md-12">
+            							<div class="form-group">
+            								{{p_form.image.label_tag}}
+                            {% render_field p_form.image class="form-control"%}
+            							</div>
+          						</div>
+          					</div>
+                    <div class="row">
+          						<div class="col-md-12">
+            							<div class="form-group">
+            								{{p_form.address.label_tag}}
+                            {% render_field p_form.address class="form-control", placeholder="Гэрийн хаяг"%}
+            							</div>
+          						</div>
+          					</div>
+                    </div>
+                    </div>
+                    <hr>
+                    <!--End step -->
+                  </aside>
+                </div>
+                <!-- /row  -->
+              </div>
+              <!-- /container -->
+            </div>
+            <!-- /bg_color_1 -->
+          <button type="submit" class="btn_1 medium">Хадгалах</button>
+        </main>
+      <!--/main-->
+      </div>
+    </div>
+    </form>
+  </div>
+    <!-- /.container-fluid-->
+</div>
+  {% block javascripts %}
+    <!-- Custom scripts for this page-->
+  	<script src="{% static "dashboard/vendor/dropzone.min.js"%}"></script>
+  {% endblock %}
+{% endblock %}

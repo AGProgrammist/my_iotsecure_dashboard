@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load device_filters %}
+
+{% block title %}
+  Төхөөрөмжүүд
+{% endblock title %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static "iotsecure/css/jquery-confirm.min.css"%}">
+{% endblock %}
+
+{% block content %}
+<br />
+<br />
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url "dashboard:home" %}">Хянах самбар</a>
+      </li>
+      <li class="breadcrumb-item active">Төхөөрөмжийн жагсаалт</li>
+    </ol>
+  <!-- DataTables Card-->
+    <div class="card mb-3">
+      <div class="card-header">
+        <i class="fa fa-table"></i> <span>Төхөөрөмжийн жагсаалт</span></div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                  {% if message|toString == "Алдаа" %}
+                    <p hidden id="messageAlert">Алдаа: Төхөөрөмжийн мэдээллийг шинэчлэх үед алдаа гарлаа!</p>
+                  {% elif message|toString == "Амжилттай"%}
+                    <p hidden id="messageAlert">Төхөөрөмжийн мэдээлэл амжилттай шинэчлэгдлээ!</p>
+                  {% else %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <p id="messageAlert"></p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Зураг</th>
+                <th>Код</th>
+                <th>Нэр</th>
+                <th>Төрөл</th>
+                <th>Эзэмшигч</th>
+                <th>Үүсгэсэн огноо</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for device in device_list %}
+                <tr>
+                  <td style="text-align: center"><img width="100px" src="{{device.image.url}}" alt=""></td>
+                  <td>{{device.code}}</td>
+                  <td>{{device.name}}</td>
+                  <td>{{device.type.name}}</td>
+                  <td>{{device.owner.username}}</td>
+                  <td>{{device.created_at}}</td>
+                  <td style="text-align: center; padding: 30px 30px 30px 30px;">
+                    <button id="btn_edit_{{device.code}}" class="btn btn-warning btn-sm edit_device">Засах</button>
+                  </td>
+                  <td style="text-align: center; padding: 30px 30px 30px 30px;">
+                    <form style="display: inline-block;" action="{% url 'devices:delete' %}" id="{{device.code}}" method="post">
+                      {% csrf_token %}
+                      <input hidden type="text" name="code" value="{{device.code}}">
+                      <button id="delete_btn_{{device.code}}" class="col btn btn-danger btn-sm">Устгах</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        <!-- /tables-->
+        </div>
+      </div>
+    </div>
+
+    <!-- Уг формыг төхөөрөмжийн мэдээлийг засах modalbox-д харуулна. !-->
+    <form hidden class="form" enctype="multipart/form-data" id="test_form" action="{% url "devices:update" %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="text" hidden name="dev_code" class="form-control"/>
+        <label>Код</label>
+        <input type="text" class="form-control" disabled id="dev_code">
+        {% render_field d_form.code|attr:"disabled" class="form-control" id="dev_code" %}
+        {{d_form.type.label_tag}}
+        {% render_field d_form.type class="form-control" id="dev_type" %}
+        {{d_form.name.label_tag}}
+        {% render_field d_form.name class="form-control" id="dev_name" %}
+        {{d_form.owner.label_tag}}
+        {% render_field d_form.owner class="form-control" id="dev_owner" %}
+        {{d_form.image.label_tag}}
+        {% render_field d_form.image class="form-control" id="dev_img" %}
+        <input style="margin-top: 20px;" class="form-control btn btn-success" id="sub_btn" type="submit" value="Хадгалах">
+      </div>
+    </form>
+  </div>
+  <!-- /container-fluid-->
+</div>
+{% endblock content %}
+{% block javascripts %}
+  <script src="{% static "iotsecure/js/jquery-confirm.min.js"%}"></script>
+  <script type="text/javascript">
+  $("#sidenavToggler").click()
+  let text = ($("#messageAlert")[0].innerHTML);
+  if (text !== ""){
+    $.confirm({
+      title: "Мессеж",
+      content: text,
+      type: text.includes("Алдаа") ? "red" : "green",
+      backgroundDismiss: false,
+      backgroundDismissAnimation: 'glow',
+      buttons: {
+        OK: function(){
+        }
+      }
+    })
+  }
+  $("#test_form").removeAttr("hidden");
+  let type_html_string = ($("#test_form")[0].outerHTML);
+  $("#test_form").remove();
+
+  $(".edit_device").on('click', function(){
+
+    // сонгосон төхөөрөмжийн кодыг авах
+    let dev_code = $(this).attr('id').replace("btn_edit_", "");
+    $.confirm({
+        title: "Засах",
+        content: '' + ((type_html_string.replace('hidden class="form"', 'class="form"')).replace('id="dev_code"', 'id="dev_code" value='+dev_code)).replace('name="dev_code"', 'name="dev_code" value='+dev_code),
+        backgroundDismiss: false,
+        backgroundDismissAnimation: 'glow',
+        buttons: {
+            болих: function () {
+              //БОЛИХ
+            }
+        }
+    });
+  });
+  </script>
+  <script src="{% static "iotsecure/js/editScript.js"%}"></script>
+  <script src="{% static "iotsecure/js/deleteScript.js"%}"></script>
+  <script src="{% static "dashboard/js/admin-datatables.js" %}"></script>
+{% endblock javascripts %}

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load device_filters %}
+
+{% block title %}
+  Төхөөрөмжүүд
+{% endblock title %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static "iotsecure/css/jquery-confirm.min.css"%}">
+  <link rel="stylesheet" href="{% static "iotsecure/css/my-style.css" %}">
+{% endblock %}
+
+{% block content %}
+<br />
+<br />
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url "dashboard:home" %}">Хянах самбар</a>
+      </li>
+      <li class="breadcrumb-item active">Миний төхөөрөмжүүд</li>
+    </ol>
+  <!-- DataTables Card-->
+    <div class="card mb-3">
+      <div class="card-header">
+        <i class="fa fa-table"></i> <span>Төхөөрөмжийн жагсаалт</span></div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                  {% if message|toString == "Алдаа" %}
+                    <p hidden id="messageAlert">Алдаа: Төхөөрөмжийн мэдээллийг шинэчлэх үед алдаа гарлаа!</p>
+                  {% elif message|toString == "Амжилттай"%}
+                    <p hidden id="messageAlert">Төхөөрөмжийн мэдээлэл амжилттай шинэчлэгдлээ!</p>
+                  {% else %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <p hidden id="messageAlert"></p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Код</th>
+                <th>Нэр</th>
+                <th>Төрөл</th>
+                <th>Эзэмшигч</th>
+                <th>Үүсгэсэн огноо</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for device in device_list %}
+                <tr>
+                  <td>{{device.code}}</td>
+                  <td>{{device.name}}</td>
+                  <td>{{device.type.name}}</td>
+                  <td>{{device.owner.username}}</td>
+                  <td>{{device.created_at}}</td>
+                  <td style="text-align: center;">
+                    <div style="text-align: center;">
+                      <button id="btn_edit_{{device.code}}" class="btn_1 outline btn-sm edit_device">Комманд</button>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        <!-- /tables-->
+        </div>
+      </div>
+    </div>
+
+    <!-- Уг формыг төхөөрөмжийн мэдээлийг засах modalbox-д харуулна. !-->
+    <form hidden class="form" enctype="multipart/form-data" id="test_form" action="{% url "devices:update" %}" method="post">
+      {% csrf_token %}
+      <table class="table table-borderless">
+        <tr>
+          <th style="text-align: center">Гэрэл</th>
+          <th style="text-align: center">Дохиолол</th>
+        </tr>
+        <tr>
+          <td>
+            <div class="light_on_off" style="text-align: center;">
+              <label class="rocker rocker-small">
+                <input onchange="lightClicked()" id="light" type="checkbox">
+                <span id="lightOff" class="switch-left">ON</span>
+                <span id="lightOnn" class="switch-right">OFF</span>
+              </label>
+            </div>
+          </td>
+          <td>
+            <div class="light_on_off" style="text-align: center;">
+              <label class="rocker rocker-small">
+                <input onchange="alertClicked()" id="alert" type="checkbox" />
+                <span id="alertOff" class="switch-left">ON</span>
+                <span id="alertOn" class="switch-right">OFF</span>
+              </label>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  <!-- /container-fluid-->
+</div>
+{% endblock content %}
+{% block javascripts %}
+  <script src="{% static "iotsecure/js/jquery-confirm.min.js"%}"></script>
+  <script type="text/javascript">
+    let dev_code = '';
+    let text = ($("#messageAlert")[0].innerHTML);
+    let device_image_url = '';
+
+    if (text !== ""){
+      $.confirm({
+        title: "Мессеж",
+        content: text,
+        type: text.includes("Алдаа") ? "red" : "green",
+        backgroundDismiss: false,
+        backgroundDismissAnimation: 'glow',
+        buttons: {
+          OK: function(){
+          }
+        }
+      })
+    }
+
+    $("#test_form").removeAttr("hidden");
+    let type_html_string = ($("#test_form")[0].outerHTML);
+    $("#test_form").remove();
+
+    $(function(){
+      $(".edit_device").on('click', function(){
+
+        // сонгосон төхөөрөмжийн кодыг авах
+        dev_code = ($(this).attr('id').replace("btn_edit_", "")).toString();
+
+        // device_image_url = '{{'"jkl"'|getDeviceImgUrl }}'
+
+        $.confirm({
+            title: "Комманд: " + dev_code,
+            content: '' + ((type_html_string.replace('hidden class="form"', 'class="form"')).replace('id="dev_code"', 'id="dev_code" value='+dev_code)).replace('name="dev_code"', 'name="dev_code" value='+dev_code),
+            backgroundDismiss: false,
+            backgroundDismissAnimation: 'glow',
+            buttons: {
+              хаах: function () {
+                //БОЛИХ
+              }
+            }
+        });
+      });
+    })
+
+    function alertClicked(){
+      if ($("#alert").prop('checked')) {
+        console.log("Дохиолол аслаа!");
+        json_data = {
+          "code": dev_code,
+          "command": "ON",
+          "type": "alert",
+          "id": "cm_si" // SIGNAL
+        };
+      } else {
+        console.log("Дохиолол унтарлаа");
+        json_data = {
+          "code": dev_code,
+          "command": "OFF",
+          "type": "light",
+          "id": "cm_si" // SIGNAL
+        }
+      }
+
+      var string_data = JSON.stringify(json_data);
+      // SEND JSON DATA
+      $.ajax({
+        url: '{% url "accounts:remote_device" %}',
+        type: "POST",
+        data: {data: string_data, csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()}
+      })
+      .done(function(response){
+        // Төхөөрөмжид комманд өгөх үед алдаа үүсвэл хэрэглэгчид мэдэгдэл
+        if (response["error"] == true) {
+          $.confirm({
+              title: 'Алдаа',
+              type: 'red',
+              content: response["message"],
+              typeAnimated: true,
+              buttons: {
+                  ok: {
+                      btnClass: 'btn-red'
+                  }
+              }
+          });
+        }
+      });
+    }
+
+    function lightClicked(){
+      if($("#light").prop('checked')) {
+        console.log("Гэрэл аслаа");
+      } else {
+        console.log("Гэрэл унтарлаа");
+      }
+    }
+  </script>
+  <script type="text/javascript">
+
+  </script>
+  <script src="{% static "iotsecure/js/editScript.js"%}"></script>
+  <script src="{% static "iotsecure/js/deleteScript.js"%}"></script>
+  <script src="{% static "dashboard/js/admin-datatables.js" %}"></script>
+{% endblock javascripts %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load device_filters %}
+
+{% block title %}
+  Төхөөрөмжүүд
+{% endblock title %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static "iotsecure/css/jquery-confirm.min.css"%}">
+{% endblock %}
+
+{% block content %}
+<br />
+<br />
+<br />
+  <div class="content-wrapper">
+      <div class="container-fluid">
+      <form enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        <div class="box_general padding_bottom">
+          <div class="header_box version_2">
+            <h2><i class="fa fa-user"></i>Төхөөрөмж бүртгэх</h2>
+          </div>
+              <div id="page" class="theia-exception">
+                <main>
+                <div class="bg_color_1">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-lg-8">
+                        <div class="box_cart">
+                        <div class="form_title">
+                          <h3>Төхөөрөмжийн мэдээлэл</h3>
+                        </div>
+                          <div class="step">
+                            <div class="row">
+                              <div class="col-md-8">
+                                {% if messages %}
+                                  {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }}">
+                                      {{ message }}
+                                    </div>
+                                  {% endfor %}
+                                {% endif %}
+                              </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                {{form.code.label_tag}}
+                                {% if form.code.errors %}
+                                  {% render_field form.code class="form-control is-invalid" placeholder="Төхөөрөмжийн код"%}
+                                  <small class="form-text" style="color: #d14734">
+                                    <ul>
+                                      <li>Төхөөрөмжийн код бүртгэгдсэн байна</li>
+                                    </ul>
+                                  </small>
+                                {% else %}
+                                  {% render_field form.code class="form-control" placeholder="Төхөөрөмжийн код"%}
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                {{form.name.label_tag}}
+                                {% if form.name.errors %}
+                                  {% render_field form.name class="form-control is-invalid" placeholder="Төхөөрөмжийн нэр"%}
+                                  <small class="form-text" style="color: #d14734">
+                                    <ul>
+                                      <li>Богино нэр оруулна уу!</li>
+                                    </ul>
+                                  </small>
+                                {% else %}
+                                  {% render_field form.name class="form-control" placeholder="Төхөөрөмжийн нэр"%}
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                {{form.type.label_tag}}
+                                {% render_field form.type class="form-control" placeholder="Төхөөрөмжийн төрөл"%}
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                {{form.owner.label_tag}}
+                                {% render_field form.owner class="form-control" placeholder="Төхөөрөмжийн эзэмшигч"%}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                {{form.image.label_tag}}
+                                {% render_field form.image class="form-control"%}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                  </aside>
+                </div>
+                  <!-- /row -->
+              </div>
+                  <!-- /container -->
+            </div>
+                <!-- /bg_color_1 -->
+          <button type="submit" class="btn_1 medium">Хадгалах</button>
+        </main>
+          <!--/main-->
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- /.container-fluid-->
+</div>
+{% endblock content %}
+{% block javascripts %}
+  <script src="{% static "iotsecure/js/jquery-confirm.min.js"%}"></script>
+  <script type="text/javascript">
+  let text = ($("#messageAlert")[0].innerHTML);
+  if (text !== ""){
+    $.confirm({
+      title: "Мессеж",
+      content: text,
+      type: text.includes("Алдаа") ? "red" : "green",
+      backgroundDismiss: false,
+      backgroundDismissAnimation: 'glow',
+      buttons: {
+        OK: function(){
+        }
+      }
+    })
+  }
+  </script>
+  <script src="{% static "dashboard/js/admin-datatables.js" %}"></script>
+{% endblock javascripts %}

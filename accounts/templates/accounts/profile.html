@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block title %}Профайл{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static "iotsecure/css/styles.css"%}">
+  <link rel="stylesheet" href="{% static "iotsecure/css/jquery-confirm.min.css"%}">
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#">Хянах самбар</a>
+      </li>
+      <li class="breadcrumb-item active">Хэрэглэгч</li>
+    </ol>
+	<div class="box_general padding_bottom">
+		<div class="header_box version_2">
+			<h2><i class="fa fa-user"></i>Хувийн мэдээлэл</h2>
+		</div>
+		<form class="form" id="{{user.username}}" enctype="multipart/form-data" method="POST">
+      {% csrf_token %}
+      <div class="row">
+  			<div class="col-md-4">
+  				<div class="form-group">
+            <table class="table table-bordered table-striped dropzone">
+              <tr>
+                <td style="text-align:center;"><img class="account-img border" src="{{ user.profile.image.url }}" alt=""></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;">
+                  <strong id="u_username">{{user.username}}</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input class="margin-top: 20px" name="{{user.profile.image}}" type='file' placeholder="50px"/>
+                </td>
+              </tr>
+            </table>
+  			  </div>
+  			</div>
+  			<div class="col-md-8 add_top_30">
+  				<div class="row">
+  					<div class="col-md-6">
+  						<div class="form-group">
+  							<label>Овог</label>
+  							<input required id="u_last" disabled type="text" value="{{user.profile.lastname}}" class="form-control {{user.username}}" placeholder="Таны овог">
+  						</div>
+  					</div>
+  					<div class="col-md-6">
+  						<div class="form-group">
+  							<label>Нэр</label>
+  							<input required id="u_first" disabled type="text" value="{{user.profile.firstname}}" class="form-control {{user.username}}" placeholder="Таны нэр">
+  						</div>
+  					</div>
+  				</div>
+  				<!-- /row-->
+  				<div class="row">
+  					<div class="col-md-6">
+  						<div class="form-group">
+  							<label>Утасны дугаар</label>
+  							<input id="u_pho" disabled type="text" value="{{user.profile.phone_num}}" maxlength="11" class="form-control {{user.username}}" placeholder="Таны утасны дугаар">
+  						</div>
+  					</div>
+            <div class="col-md-6">
+  						<div class="form-group">
+  							<label>Регистрийн дугаар</label>
+  							<input required id="u_reg" disabled type="text" value="{{user.profile.identity_num}}" maxlength="10" class="form-control" placeholder="Таны регистрийн дугаар">
+  						</div>
+  					</div>
+  				</div>
+          <div class="row">
+  					<div class="col-md-6">
+  						<div class="form-group">
+  							<label>Хүйс</label>
+  							<input required id="u_gender" disabled type="text" value="{{user.profile.gender}}" class="form-control" placeholder="Таны хүйс">
+  						</div>
+  					</div>
+            <div class="col-md-6">
+  						<div class="form-group">
+  							<label>Төрсөн огноо</label>
+  							<input required id="u_birth" disabled type="text" value="{{user.profile.birth}}" class="form-control">
+  						</div>
+  					</div>
+  				</div>
+  				<!-- /row-->
+  				<div class="row">
+  					<div class="col-md-12">
+  						<div class="form-group">
+  							<label>Хаяг</label>
+  							<textarea id="u_address" disabled style="height:100px;" class="form-control {{user.username}}" placeholder="Оршин суугаа хаяг">{{user.profile.address}}</textarea>
+  						</div>
+  					</div>
+  				</div>
+  				<div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input id="btn_{{user.username}}" type="submit" class="btn_1 outline" value="Засах">
+              </div>
+            </div>
+          </div>
+  				<!-- /row-->
+  			</div>
+  		</div>
+    </form>
+	</div>
+	<!-- /box_general-->
+	<div class="row">
+		<div class="col-md-6">
+			<div class="box_general padding_bottom">
+				<form action="{% url "accounts:change_password"%}" method="POST">
+          {% csrf_token %}
+          <div class="header_box version_2">
+  					<h2><i class="fa fa-lock"></i>Нууц үг солих</h2>
+  				</div>
+          {% if messages %}
+            {% for message in messages %}
+              <small style="color: red;">
+                {{ message }}
+              </small>
+            {% endfor %}
+          {% endif %}
+  				<div class="form-group">
+  					<label>Хуучин нууц үг</label>
+            {% if pchange_form.old_password.errors %}
+              {% render_field pchange_form.old_password|attr:"tabindex='-1'" class="form-control is_invalid" placeholder="Таны хуучин нууц үг"%}
+            {% else %}
+              {% render_field pchange_form.old_password class="form-control" placeholder="Таны хуучин нууц үг"%}
+            {% endif %}
+  				</div>
+  				<div class="form-group">
+  					<label>Шинэ нууц үг</label>
+            {% if pchange_form.new_password1.errors %}
+              {% render_field pchange_form.new_password1 class="form-control is_invalid" placeholder="Таны шинэ нууц үг"%}
+            {% else %}
+              {% render_field pchange_form.new_password1 class="form-control" placeholder="Таны шинэ нууц үг"%}
+            {% endif %}
+  				</div>
+  				<div class="form-group">
+  					<label>Шинэ нууц үг баталгаажуулах</label>
+            {% if pchange_form.new_password2.errors %}
+              {% render_field pchange_form.new_password2 class="form-control is_invalid" placeholder="Нууц үг баталгаажуулах"%}
+            {% else %}
+              {% render_field pchange_form.new_password2 class="form-control" placeholder="Нууц үг баталгаажуулах"%}
+            {% endif %}
+  				</div>
+          <input type="submit" class="btn btn-success btn-sm" value="Солих" />
+        </form>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="box_general padding_bottom">
+        <form id="emailchange" class="form" method="POST">
+          {% csrf_token %}
+          <div class="header_box version_2">
+  					<h2><i class="fa fa-envelope"></i>И-мэйл</h2>
+  				</div>
+  				<div class="form-group">
+  					<label>Хуучин и-мэйл</label>
+  					<input required class="form-control" id="old_email" type="email" placeholder="Таны хуучин и-мэйл хаяг">
+  				</div>
+  				<div class="form-group">
+  					<label>Шинэ и-мэйл</label>
+  					<input required class="form-control" name="new_email" id="new_email" type="email" placeholder="Таны шинэ и-мэйл хаяг">
+  				</div>
+  				<div class="form-group">
+  					<label>Шинэ и-мэйл баталгаажуулах</label>
+  					<input required class="form-control" name="confirm_new_email" id="confirm_new_email" type="email" placeholder="Шинэ и-мэйл хаяг баталгаажуулах">
+  				</div>
+          <input id="change_email" type="submit" class="btn btn-success btn-sm" value="Солих">
+			   </div>
+      </form>
+		</div>
+	</div>
+  </div>
+<!-- /.container-fluid-->
+</div>
+{% endblock %}
+{% block javascripts %}
+  <script src="{% static "iotsecure/js/jquery-confirm.min.js"%}"></script>
+  <script type="text/javascript">
+    $("form").on('submit', function(e){
+        if(typeof $(this).attr("id") !== 'undefined') {
+          e.preventDefault();
+          var username = $("#u_username").html();
+
+          if($(this).attr("id") == "emailchange") {
+            let old_email = $("#old_email").val();
+            let new_email = $("#new_email").val();
+            let conf_email = $("#confirm_new_email").val();
+
+            let json_data = [];
+            json_data = {"username":username, "old_email":old_email, "new_email":new_email, "conf_email":conf_email};
+            let string_data = JSON.stringify(json_data);
+            $.ajax({
+              url: '{% url "accounts:change_email" %}',
+              type: "POST",
+              data: {data: string_data, csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()}
+              })
+              .done(function(response){
+                if (response["error"] == false){
+                  $.confirm({
+                      title: 'Мессеж',
+                      type: 'blue',
+                      content: response["message"],
+                      backgroundDismiss: false,
+                      backgroundDismissAnimation: 'glow',
+                      typeAnimated: true,
+                      buttons: {
+                          ok: {
+                              btnClass: 'btn-blue'
+                          }
+                      }
+                  });
+                } else if (response["error"] == true) {
+                    $.confirm({
+                        title: 'Алдаа',
+                        type: 'red',
+                        content: response["message"],
+                        typeAnimated: true,
+                        backgroundDismiss: false,
+                        backgroundDismissAnimation: 'glow',
+                        buttons: {
+                            ok: {
+                                btnClass: 'btn-red'
+                            }
+                        }
+                    });
+                  }
+              });
+          } else {
+            id = $(this).attr("id");
+            $("."+id).is(":disabled") ? $("#btn_"+id).removeClass("outline") : $("#btn_"+id).addClass("outline");
+            $("."+id).prop('disabled', $("."+id).is(":disabled") ? false : true);
+            $("#btn_"+id).prop("value", ($("#btn_"+id).val()) == "Засах" ? "Хадгалах" : "Засах");
+
+            if ($("#btn_"+id).val() == "Засах"){
+              var json_data = [];
+              json_data = {
+                          "username": username,
+                          "firstname":$("#u_first").val(),
+                          "lastname": $("#u_last").val(),
+                          "phone_num": $("#u_pho").val(),
+                          "reg_num": $("#u_reg").val(),
+                          "email": $("#u_email").val(),
+                          "address": $("#u_address").val(),
+                          "gender": $("#u_gender").val()
+                          };
+              var string_data = JSON.stringify(json_data);
+
+              $.ajax({
+                url: '{% url "accounts:update" %}',
+                type: "POST",
+                data: {data: string_data, csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()}
+              })
+              .done(function(response){
+                if (response["error"] == false){
+                  $.confirm({
+                      title: 'Мессеж',
+                      type: 'blue',
+                      content: response["message"],
+                      backgroundDismiss: false,
+                      backgroundDismissAnimation: 'glow',
+                      typeAnimated: true,
+                      buttons: {
+                          ok: {
+                              btnClass: 'btn-blue'
+                          }
+                      }
+                  });
+                } else if (response["error"] == true) {
+                  $.confirm({
+                      title: 'Алдаа',
+                      type: 'red',
+                      content: response["message"],
+                      typeAnimated: true,
+                      backgroundDismiss: false,
+                      backgroundDismissAnimation: 'glow',
+                      buttons: {
+                          ok: {
+                              btnClass: 'btn-red'
+                          }
+                      }
+                  });
+                }
+              });
+          }
+        }
+      }
+    });
+    $('html, body').animate({ scrollTop: 0 }, '200');
+  </script>
+  <script src="{% static "dashboard/vendor/dropzone.min.js"%}"></script>
+{% endblock javascripts %}

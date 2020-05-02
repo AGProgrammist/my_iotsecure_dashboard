@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block title %}
+  Хэрэглэгчид
+{% endblock title %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static "iotsecure/css/jquery-confirm.min.css"%}">
+{% endblock %}
+
+{% block content %}
+<br />
+<br />
+<br />
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url "dashboard:home" %}">Хянах самбар</a>
+      </li>
+      <li class="breadcrumb-item active">Хэрэглэгчийн жагсаалт</li>
+    </ol>
+  <!-- Example DataTables Card-->
+    <div class="card mb-3">
+      <div class="card-header">
+        <i class="fa fa-table"></i> Хэрэглэгчдийн жагсаалт</div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Зураг</th>
+                <th>Хэрэглэгчийн нэр</th>
+                <th>Овог</th>
+                <th>Нэр</th>
+                <th>Нас</th>
+                <th>Хүйс</th>
+                <th>Регистрийн дугаар</th>
+                <th>Утасны дугаар</th>
+                <th>Имэйл</th>
+                <th>Гэрийн хаяг</th>
+                <th>Үүсгэсэн огноо</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <!-- <tfoot>
+              <tr>
+                <th>ID</th>
+                <th>Зураг</th>
+                <th>Хэрэглэгчийн нэр</th>
+                <th>Овог</th>
+                <th>Нэр</th>
+                <th>Нас</th>
+                <th>Хүйс</th>
+                <th>Регистрийн дугаар</th>
+                <th>Утасны дугаар</th>
+                <th>Имэйл</th>
+                <th>Гэрийн хаяг</th>
+                <th>Үүсгэсэн огноо</th>
+                <th></th>
+              </tr>
+            </tfoot> !-->
+            <tbody>
+              {% for user in user_list  %}
+                <tr>
+                  <td>{{user.id}}</td>
+                  <td style="text-align:center">
+                    <img width="50px" src="{{ user.profile.image.url }}" alt="">
+                  </td>
+                  <td>{{user.username}}</td>
+                  <td>{{user.profile.lastname}}</td>
+                  <td>{{user.profile.firstname}}</td>
+                  <td>{{user.profile.birth.year|upper}}</td>
+                  <td>{{user.profile.gender}}</td>
+                  <td>{{user.profile.identity_num}}</td>
+                  <td>{{user.profile.phone_num}}</td>
+                  <td>{{user.email}}</td>
+                  <td>{{user.profile.address}}</td>
+                  <td>{{user.profile.created_at}}</td>
+                  <td style="text-align: center; padding: 30px 30px 30px 30px;">
+                      <button class="btn btn-warning btn-sm">Засах</button>
+                  </td>
+                  <td style="text-align: center; padding: 30px 30px 30px 30px;">
+                    <form style="display: inline-block;" action="{% url 'users:delete' %}" id="{{user.id}}" method="POST">
+                      {% csrf_token %}
+                      <input hidden type="text" name="id" value="{{user.id}}">
+                      <button id="delete_btn_{{user.id}}" class="btn btn-danger btn-sm">Устгах</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <!-- /tables-->
+  </div>
+  <!-- /container-fluid-->
+</div>
+
+
+<!-- Уг формыг хэрэглэгчийн мэдээлийг засах modalbox-д харуулна. !-->
+<form hidden class="form" enctype="multipart/form-data" id="test_form" action="{% url "users:update"%}" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <input type="text" hidden name="dev_code" class="form-control"/>
+    <label>Код</label>
+    <input type="text" class="form-control" disabled id="dev_code">
+    {% render_field u_form.code|attr:"disabled" class="form-control" id="dev_code" %}
+    {{u_form.type.label_tag}}
+    {% render_field u_form.type class="form-control" id="dev_type" %}
+    {{u_form.name.label_tag}}
+    {% render_field u_form.name class="form-control" id="dev_name" %}
+    {{u_form.owner.label_tag}}
+    {% render_field u_form.owner class="form-control" id="dev_owner" %}
+    {{u_form.image.label_tag}}
+    {% render_field u_form.image class="form-control" id="dev_img" %}
+    <input style="margin-top: 20px;" class="form-control btn btn-success" id="sub_btn" type="submit" value="Хадгалах">
+  </div>
+</form>
+{% endblock content %}
+{% block javascripts %}
+  <script type="text/javascript">
+          $("#sidenavToggler").click()
+  </script>
+  <script src="{% static "iotsecure/js/jquery-confirm.min.js"%}"></script>
+  <script src="{% static "iotsecure/js/deleteScript.js"%}"></script>
+  <script src="{% static "dashboard/js/admin-datatables.js"%}"></script>
+{% endblock javascripts %}

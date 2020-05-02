@@ -1,0 +1,69 @@
+{% load staticfiles %}
+{% load my_extras %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-default fixed-top" id="mainNav">
+<a class="navbar-brand" href="{% url 'dashboard:home'%}"><img src="{% static "dashboard/img/logo.png"%}" data-retina="true" alt="" width="150" height="36"></a>
+<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarResponsive">
+  <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Хяналтын самбар">
+      <a class="nav-link" href="{% url "dashboard:home"%}">
+        <i class="fa fa-fw fa-dashboard"></i>
+        <span class="nav-link-text">Хяналтын самбар</span>
+      </a>
+    </li>
+{% if request.user.is_staff == False %}
+  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Зурвасууд">
+    <a class="nav-link" href="messages.html">
+      <i class="fa fa-fw fa-envelope-open"></i>
+      <span class="nav-link-text">Зурвасууд</span>
+    </a>
+  </li>
+{% endif %}
+{% if request.user.is_staff %}
+<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Миний жагсаалт">
+  <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMylistings" data-parent="#mylistings">
+    <i class="fa fa-fw fa-list"></i>
+    <span class="nav-link-text">Миний жагсаалт</span>
+  </a>
+  <ul class="sidenav-second-level collapse" id="collapseMylistings">
+      <li>
+        <a href="{% url "users:list"%}">Хэрэглэгч<span id="user_count" class="badge badge-pill badge-primary">{{"user"|getObjectCount}}</span></a>
+      </li>
+    <li>
+      <a href="{% url "devices:list"%}">Төхөөрөмж<span id="device_count" class="badge badge-pill badge-success">{{"device"|getObjectCount}}</span></a>
+    </li>
+  </ul>
+</li>
+{% elif request.user.is_staff == False %}
+<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Миний төхөөрөмжүүд">
+  <a class="nav-link" href="{% url "accounts:my_devices" %}">
+    <i class="fa fa-fw fa-list"></i>
+    <span class="nav-link-text">Төхөөрөмжүүд</span>
+  </a>
+</li>
+{% endif %}
+{% if request.user.is_staff %}
+  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Төхөөрөмж бүртгэх">
+    <a class="nav-link" href="{% url "devices:device_create" %}">
+      <i class="fa fa-fw fa-plus-circle"></i>
+      <span class="nav-link-text">Төхөөрөмж бүртгэх</span>
+    </a>
+  </li>
+  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Хэрэглэгч бүртгэх">
+    <a class="nav-link" href="{% url "users:user_create" %}">
+      <i class="fa fa-fw fa-plus-circle"></i>
+      <span class="nav-link-text">Хэрэглэгч бүртгэх</span>
+    </a>
+  </li>
+{% endif %}
+  <!-- <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Миний хувийн мэдээлэл">
+    <a class="nav-link" href="{% url "accounts:user_profile" %}">
+      <i class="fa fa-fw fa-user"></i>
+      <span class="nav-link-text">Миний хувийн мэдээлэл</span>
+    </a>
+  </li>
+  !-->
+</ul>

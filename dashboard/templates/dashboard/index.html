@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load my_extras %}
+
+{% block title %} Хяналтын самбар {% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static "dashboard/css/style.css"%}">
+{% endblock %}
+
+<!-- <body class="fixed-nav sticky-footer" id="page-top"> -->
+{% block content %}
+<!-- Navigation-->
+  {% if user.is_authenticated %}
+  <br />
+  {% if request.user.is_staff == False %}
+    <input type="text" hidden id="is_userstaff" value="customer" />
+  {% else %}
+    <input type="text" hidden id="is_userstaff" value="admin" />
+  {% endif %}
+  </p>
+  <!-- /Navigation-->
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a>Хянах самбар</a>
+        </li>
+      </ol>
+    <!-- Icon Cards-->
+      <div class="row">
+        {% if request.user.is_staff == False %}
+          <div class="col-xl-4 col-sm-6 mb-3">
+        {% else %}
+          <div class="col-xl-6 col-sm-6 mb-3">
+        {% endif %}
+          <div class="card dashboard text-white bg-success o-hidden h-100">
+            <div class="card-body">
+              <div class="card-body-icon">
+                <i class="fa fa-fw fa-star"></i>
+              </div>
+              <div class="mr-5">
+                {% if request.user.is_staff %}
+                  <h5>{{"user"|getObjectCount}} хэрэглэгч</h5>
+                {% else %}
+                  <h5>{{request.user.id|getDeviceCount}} төхөөрөмж</h5>
+                {% endif %}
+              </div>
+            </div>
+            <p class="card-footer text-white clearfix small z-1"></p>
+          </div>
+        </div>
+        {% if request.user.is_staff == False %}
+          <div class="col-xl-4 col-sm-6 mb-3">
+        {% else %}
+          <div class="col-xl-6 col-sm-6 mb-3">
+        {% endif %}
+          <div class="card dashboard text-white bg-danger o-hidden h-100">
+            <div class="card-body">
+              <div class="card-body-icon">
+                {% if request.user.is_staff == False %}
+                  <i class="fa fa-fw fas fa-exclamation-triangle"></i>
+                {% else %}
+                  <i class="fa fa-fw fas fa-tablet"></i>
+                {% endif %}
+              </div>
+              <div class="mr-5">
+                {% if request.user.is_staff %}
+                  <h5>{{"device"|getObjectCount}} төхөөрөмж</h5>
+                {% else %}
+                  <h5>{{request.user.id|getAlertCount}} анхааруулга мэдэгдэл</h5>
+                {% endif %}
+              </div>
+            </div>
+            <p class="card-footer text-white clearfix small z-1"></p>
+          </div>
+        </div>
+        {% if request.user.is_staff == False %}
+          <div class="col-xl-4 col-sm-6 mb-3">
+            <div class="card dashboard text-white bg-primary o-hidden h-100">
+              <div class="card-body">
+                <div class="card-body-icon">
+                  <i class="fa fa-fw fa-envelope-open"></i>
+                </div>
+                <div class="mr-5">
+                  <h5>{{request.user.id|getCommonMsgCount}} энгийн мэдэгдэл</h5>
+                </div>
+              </div>
+              <p class="card-footer text-white clearfix small z-1"></p>
+            </div>
+          </div>
+        {% endif %}
+    </div>
+    <!-- /cards -->
+    <h2></h2>
+    <div class="box_general padding_bottom">
+      <div class="header_box version_2">
+        <h2 id="chart_title"><i class="fa fa-bar-chart"></i>Бүртгүүлсэн хэрэглэгчид</h2>
+          <div style="float: right;" class="form-group">
+            <select class="form-control choice" id="sel1">
+              <option>Хэрэглэгч</option>
+              <option>Төхөөрөмж</option>
+            </select>
+          </div>
+      </div>
+     <canvas id="myAreaChart" width="100%" height="30" style="margin:45px 0 15px 0;"></canvas>
+    </div>
+  </div>
+    <!-- /.container-fluid-->
+</div>
+    <!-- /.container-wrapper-->
+{% endif %}
+{% endblock content %}
+{% block javascripts %}
+  <script src="{% static "dashboard/js/jquery.nice-select.js" %}"></script>
+  <script type="text/javascript">
+    var myLineChart;
+    $(document).ready(function(){
+      $("select.country").change(function(){
+          var selectedChoice = $(this).children("option:selected").val();
+          if(selectedChoice === "Төхөөрөмж") {
+
+          }
+      });
+    });
+    Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+    Chart.defaults.global.defaultFontColor = '#292b2c';
+    is_user_staff = ($("#is_userstaff").attr('value')).toString()
+
+    var ctx = document.getElementById("myAreaChart");
+
+    if($("#is_userstaff").attr('value') === 'customer') {
+      $("#chart_title")[0].innerText = "Төхөөрөмжөөс ирсэн дохиолол"
+      myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
+          datasets: [{
+            label: "Хэрэглэгч",
+            lineTension: 0.3,
+            backgroundColor: "rgba(2,117,216,0.2)",
+            borderColor: "rgba(2,117,216,1)",
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(2,117,216,1)",
+            pointBorderColor: "rgba(255,255,255,0.8)",
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+            pointHitRadius: 20,
+            pointBorderWidth: 2,
+            data: [{{"1"|getUserCount}},
+                  {{"2"|getUserCount}},
+                  {{"3"|getUserCount}},
+                  {{"4"|getUserCount}},
+                  {{"5"|getUserCount}},
+                  {{"6"|getUserCount}},
+                  {{"7"|getUserCount}},
+                  {{"8"|getUserCount}},
+                  {{"9"|getUserCount}},
+                  {{"10"|getUserCount}},
+                  {{"11"|getUserCount}},
+                  {{"12"|getUserCount}},
+                  {{"13"|getUserCount}},
+                  {{"14"|getUserCount}},
+                  {{"15"|getUserCount}},
+                  {{"16"|getUserCount}},
+                  {{"17"|getUserCount}},
+                  {{"18"|getUserCount}},
+                  {{"19"|getUserCount}},
+                  {{"20"|getUserCount}},
+                  {{"21"|getUserCount}},
+                  {{"22"|getUserCount}},
+                  {{"23"|getUserCount}},
+                  {{"24"|getUserCount}},
+                  {{"25"|getUserCount}},
+                  {{"26"|getUserCount}},
+                  {{"27"|getUserCount}},
+                  {{"28"|getUserCount}},
+                  {{"29"|getUserCount}},
+                  {{"30"|getUserCount}},
+                ],
+          }],
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              time: {
+                unit: 'date'
+              },
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                maxTicksLimit: 7
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 50,
+                maxTicksLimit: 5
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, .125)",
+              }
+            }],
+          },
+          legend: {
+            display: false
+          }
+        }
+      });
+    } else if($("#is_userstaff").attr('value') === 'admin') {
+        myLineChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+            datasets: [{
+              label: "Хэрэглэгч",
+              lineTension: 0.3,
+              backgroundColor: "rgba(2,117,216,0.2)",
+              borderColor: "rgba(2,117,216,1)",
+              pointRadius: 5,
+              pointBackgroundColor: "rgba(2,117,216,1)",
+              pointBorderColor: "rgba(255,255,255,0.8)",
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: "rgba(2,117,216,1)",
+              pointHitRadius: 20,
+              pointBorderWidth: 2,
+              data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
+                    {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
+            }],
+          },
+          options: {
+            scales: {
+              xAxes: [{
+                time: {
+                  unit: 'date'
+                },
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  maxTicksLimit: 7
+                }
+              }],
+              yAxes: [{
+                ticks: {
+                  min: 0,
+                  max: 50,
+                  maxTicksLimit: 5
+                },
+                gridLines: {
+                  color: "rgba(0, 0, 0, .125)",
+                }
+              }],
+            },
+            legend: {
+              display: false
+            }
+          }
+        });
+    }
+    myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["2 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+        datasets: [{
+          label: "Хэрэглэгч",
+          lineTension: 0.3,
+          backgroundColor: "rgba(2,117,216,0.2)",
+          borderColor: "rgba(2,117,216,1)",
+          pointRadius: 5,
+          pointBackgroundColor: "rgba(2,117,216,1)",
+          pointBorderColor: "rgba(255,255,255,0.8)",
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(2,117,216,1)",
+          pointHitRadius: 20,
+          pointBorderWidth: 2,
+          data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
+                {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
+        }],
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            time: {
+              unit: 'date'
+            },
+            gridLines: {
+              display: false
+            },
+            ticks: {
+              maxTicksLimit: 7
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              min: 0,
+              max: 50,
+              maxTicksLimit: 5
+            },
+            gridLines: {
+              color: "rgba(0, 0, 0, .125)",
+            }
+          }],
+        },
+        legend: {
+          display: false
+        }
+      }
+    })
+  </script>
+  <script src="{% static "dashboard/js/admin-charts.js"%}"></script>
+{% endblock javascripts%}

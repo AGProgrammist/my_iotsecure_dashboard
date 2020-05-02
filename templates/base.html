@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Ansonika">
+    <title>IOTSecure - {% block title %}{% endblock %}</title>
+
+    <link rel="shortcut icon" href="{% static "dashboard/img/favicon.ico" %}" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="{% static "dashboard/img/apple-touch-icon-72x72-precomposed.png"%}">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="{% static "img/apple-touch-icon-114x114-precomposed.png" %}">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="{% static "img/apple-touch-icon-144x144-precomposed.png" %}">
+
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800" rel="stylesheet">
+
+    <!-- Bootstrap core CSS-->
+    <link href="{% static "dashboard/vendor/bootstrap/css/bootstrap.min.css"%}" rel="stylesheet">
+    <!-- Main styles -->
+    <link href="{% static "dashboard/css/admin.css"%}" rel="stylesheet">
+    <!-- Icon fonts-->
+    <link href="{% static "dashboard/vendor/font-awesome/css/font-awesome.min.css"%}" rel="stylesheet" type="text/css">
+    <!-- Plugin styles -->
+    <link href="{% static "dashboard/vendor/datatables/dataTables.bootstrap4.css"%}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "dashboard/vendor/dropzone.css"%}">
+    <!-- Your custom styles -->
+    <link href="{% static "dashboard/css/custom.css"%}" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static "iotsecure/css/styles.css"%}"> -->
+
+    {% block stylesheets %}
+
+    {% endblock stylesheets %}
+  </head>
+  <body>
+    {% block content %}
+    {% endblock content%}
+    {% if user.is_authenticated %}
+    {% include "includes/toggle_navbar.html" %}
+        <ul class="navbar-nav sidenav-toggler">
+          <li class="nav-item">
+            <a class="nav-link text-center" id="sidenavToggler">
+              <i class="fa fa-fw fa-angle-left"></i>
+            </a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          {% if request.user.is_staff == False %}
+          {% include "includes/received_messages.html" %}
+          {% include "includes/received_alerts.html" %}
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "accounts:user_profile" %}">
+              <i class="fa fa-fw fa-user"></i>{{request.user.username}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+              <i class="fa fa-fw fa-sign-out"></i>Гарах</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <br />
+    <br />
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Copyright © IOTSecure 2020</small>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Та гарахдаа итгэлтэй байна уу?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Хэрэв гарах бол гарах дээр дарна уу.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Болих</button>
+            <a class="btn btn-primary" href="{% url 'accounts:logout'%}">Гарах</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <!-- Bootstrap core JavaScript-->
+      <script src="{% static "dashboard/vendor/jquery/jquery.min.js"%}"></script>
+      <script src="{% static "dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js"%}"></script>
+    <!-- Core plugin JavaScript-->
+      <script src="{% static "dashboard/vendor/jquery-easing/jquery.easing.min.js"%}"></script>
+    <!-- Page level plugin JavaScript-->
+      <script src="{% static "dashboard/vendor/chart.js/Chart.js"%}"></script>
+      <script src="{% static "dashboard/vendor/datatables/jquery.dataTables.js"%}"></script>
+      <script src="{% static "dashboard/vendor/datatables/dataTables.bootstrap4.js"%}"></script>
+      <script src="{% static "dashboard/vendor/jquery.selectbox-0.2.js"%}"></script>
+      <script src="{% static "dashboard/vendor/retina-replace.min.js"%}"></script>
+      <script src="{% static "dashboard/vendor/jquery.magnific-popup.min.js"%}"></script>
+    <!-- Custom scripts for all pages-->
+      <script src="{% static "dashboard/js/admin.js"%}"></script>
+      {% block javascripts %}
+      {% endblock %}
+  </body>
+</html>

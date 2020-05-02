@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+{% block title %}Нэвтрэх{% endblock %}
+{% block stylesheets %}
+  <!--===============================================================================================-->
+  <link rel="icon" type="image/png" href="{% static "accounts/images/icons/favicon.ico" %}"/>
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/vendor/bootstrap/css/bootstrap.min.css" %}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/fonts/font-awesome-4.7.0/css/font-awesome.min.css" %}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/fonts/Linearicons-Free-v1.0.0/icon-font.min.css"%}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/vendor/animate/animate.css"%}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/vendor/css-hamburgers/hamburgers.min.css"%}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/vendor/animsition/css/animsition.min.css"%}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/vendor/select2/select2.min.css"%}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/vendor/daterangepicker/daterangepicker.css"%}">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/css/util.css"%}">
+  <link rel="stylesheet" type="text/css" href="{% static "accounts/css/main.css"%}">
+{% endblock %}
+{% block content %}
+  <div class="limiter">
+    <div class="container-login100" style="background-image: url('{% static "accounts/images/bg-065.jpg"%}');">
+      <div class="p-t-30 p-b-50">
+        <span class="login100-form-title p-b-41">
+          Нэвтрэх
+        </span>
+        <form method="POST" class="login100-form validate-form p-b-33 p-t-5">
+          {% csrf_token %}
+          <div class="wrap-input100 validate-input" data-validate = "Нэвтрэх нэрээ бичээч т1 ээ">
+            <input class="input100" type="text" name="username" placeholder="Нэр">
+            <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+          </div>
+          <div class="wrap-input100 validate-input" data-validate="Нууц үгээ оруул">
+            <input class="input100" type="password" name="password" placeholder="Нууц үг">
+            <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+          </div>
+          <div class="container-login100-form-btn m-t-32">
+            <input type="submit" class="login100-form-btn" value="Нэвтрэх"/>
+          </div>
+          <br />
+          {% if form.errors %}
+            <span style="color: red; margin-left: 30px;">Нэвтрэх нэр эсвэл нууц үг буруу байна!</span>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+  <!--===============================================================================================-->
+  <script src="{% static "accounts/vendor/jquery/jquery-3.2.1.min.js"%}"></script>
+  <!--===============================================================================================-->
+  <script src="{% static "accounts/vendor/animsition/js/animsition.min.js"%}"></script>
+  <!--===============================================================================================-->
+  <script src="{% static "accounts/vendor/bootstrap/js/popper.js"%}"></script>
+  <script src="{% static "accounts/vendor/bootstrap/js/bootstrap.min.js"%}"></script>
+  <!--===============================================================================================-->
+  <script src="{% static "accounts/vendor/select2/select2.min.js"%}"></script>
+  <!--===============================================================================================-->
+  <script src="{% static "accounts/vendor/daterangepicker/moment.min.js"%}"></script>
+  <script src="{% static "accounts/vendor/daterangepicker/daterangepicker.js"%}"></script>
+  <!--===============================================================================================-->
+  <script src="{% static "accounts/vendor/countdowntime/countdowntime.js"%}"></script>
+  <!--===============================================================================================-->
+  <script src="{% static "accounts/js/main.js" %}"></script>
+{% endblock %}
