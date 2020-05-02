@@ -49,6 +49,20 @@ def getDeviceCountMonth(month):
                                     ' AND MONTH(created_at) = ' + month)
     return len(device_list)
 
+@register.filter(name="getDeviceAlertCountMonth")
+def getDeviceAlertCountMonth(dev_id, month):
+    """
+    Тухайн төхөөрөмжөөс ирсэн нийт анхааруулга мэдэгдлийн тоог харуулна.
+    """
+    counter = 0
+    devices = Device.objects.filter(code = dev_id)
+    for item in devices:
+        # Анхааруулга мэдэгдлийн id = 1
+        alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
+        counter = counter + len(alert)
+    return counter
+
+
 @register.filter(name="getDeviceCount")
 def getDeviceCount(u_id):
     """
@@ -57,6 +71,19 @@ def getDeviceCount(u_id):
     devices = Device.objects.filter(owner_id = int(u_id))
 
     return len(devices)
+
+@register.filter(name="getAlertCount")
+def getAlertCount(u_id):
+    """
+    Тухайн хэрэглэгчид ирсэн нийт анхааруулга мэдэгдлийн тоог харуулна.
+    """
+    counter = 0
+    devices = Device.objects.filter(owner_id = int(u_id))
+    for item in devices:
+        # Анхааруулга мэдэгдлийн id = 1
+        alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
+        counter = counter + len(alert)
+    return counter
 
 @register.filter(name="getAlertCount")
 def getAlertCount(u_id):
