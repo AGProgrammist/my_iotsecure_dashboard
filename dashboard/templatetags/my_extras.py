@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.contrib.auth import get_user_model
 from datetime import datetime
 from dashboard.models import Device, DeviceAndNotification
+import json
 
 User = get_user_model()
 register = template.Library()
@@ -85,18 +86,93 @@ def getAlertCount(u_id):
         counter = counter + len(alert)
     return counter
 
-@register.filter(name="getAlertCount")
-def getAlertCount(u_id):
+
+@register.filter(name="getAlertCountCustom")
+def getAlertCountCustom(user, args):
+    counter = 0
+    allCount = {}
+    today = datetime.now()
+
+    if args is None:
+        return False
+    arg_list = [arg.strip() for arg in args.split(',')]
+
+    if arg_list[0] == "separate":
+        devices = Device.objects.filter(owner_id = user.id)
+        for item in devices:
+            counter = 0
+            # Анхааруулга мэдэгдлийн id = 1
+            # Тухайн төхөөрөмжөөс ирсэн анхааруулга мэдэгдэлийг шүүх
+            # alert = DeviceAndNotification.objects.raw("SELECT * FROM dashboard.DeviceAndNotification " +
+            #                                           " device_id = " + item.code + " AND " + "notification_id=1")
+            alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
+            for alert_item in alert:
+                if alert_item.created_at.year == today.year and str(alert_item.created_at.month) == arg_list[1]:
+                    counter += 1
+            allCount[item.code] = counter
+
+        result = json.dumps(allCount)
+        return result
+    elif arg_list[0] == "all":
+        devices = Device.objects.filter(owner_id = user.id)
+        for item in devices:
+            # Анхааруулга мэдэгдлийн id = 1
+            # Бүх төхөөрөмжөөс ирсэн анхааруулга мэдэгдэлийг шүүх
+
+            alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
+            for alert_item in alert:
+                if alert_item.created_at.year == today.year and str(alert_item.created_at.month) == arg_list[1]:
+                    counter += 1
+        return counter
+    else:
+        return 0
+
+@register.filter(name="getAlertCountDevice")
+def getAlertCountDevice(user, args):
     """
-    Тухайн хэрэглэгчид ирсэн нийт анхааруулга мэдэгдлийн тоог харуулна.
+    Төхөөрөмж тус бүрт ирсэн анхааруулга мэдэгдэлийг буцаана
     """
     counter = 0
-    devices = Device.objects.filter(owner_id = int(u_id))
-    for item in devices:
-        # Анхааруулга мэдэгдлийн id = 1
-        alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
-        counter = counter + len(alert)
-    return counter
+    allCount = {}
+    today = datetime.now()
+
+    if args is None:
+        return False
+    arg_list = [arg.strip() for arg in args.split(',')]
+
+    if arg_list[0] == "all":
+        devices = Device.objects.filter(owner_id = user.id)
+        for item in devices:
+            counter = 0
+            # Анхааруулга мэдэгдлийн id = 1
+            # Тухайн төхөөрөмжөөс ирсэн анхааруулга мэдэгдэлийг шүүх
+            # alert = DeviceAndNotification.objects.raw("SELECT * FROM dashboard.DeviceAndNotification " +
+            #                                           " device_id = " + item.code + " AND " + "notification_id=1")
+            alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
+            for alert_item in alert:
+                if alert_item.created_at.year == today.year and str(alert_item.created_at.month) == arg_list[1]:
+                    counter += 1
+            allCount[item.code] = counter
+    result = json.dumps(allCount)
+    return result
+
+# @register.filter(name="getDeviceAlertCountMonth")
+# def getDeviceAlertCountMonth(device_id, month):
+#     """
+#     Тухайн сард тус төхөөрөмжид ирсэн нийт анхааруулга мэдэгдлийн тоог харуулна.
+#     """
+#     counter = 0
+#     devices = Device.objects.filter(code=device_id)
+#
+#     for item in devices:
+#         # Анхааруулга мэдэгдлийн id = 1
+#         # Тухайн төхөөрөмжөөс ирсэн анхааруулга мэдэгдэлийг шүүх
+#         alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
+#         today = datetime.now()
+#
+#         if alert.created_at.year == today.year and alert.created_at.month == month:
+#             counter = counter + len(alert)
+#     return counter
 
 @register.filter(name="getCommonMsgCount")
 def getCommonMsgCount(u_id):

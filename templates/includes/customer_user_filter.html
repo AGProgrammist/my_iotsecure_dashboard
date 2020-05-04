@@ -2,7 +2,7 @@
 
 <h2 id="chart_title"><i class="fa fa-bar-chart"></i></h2>
 <div style="float: right;" class="form-group">
-  <select disabled id="days" class="form-control devices_choice">
+  <select disabled id="days" class="form-control devices_days">
     <option>Бүх өдөр</option>
     <option>1</option>
     <option>2</option>
@@ -38,7 +38,7 @@
   </select>
 </div>
 <div style="float: right;" class="form-group">
-  <select disabled id="months" class="form-control devices_choice">
+  <select disabled id="months" class="form-control devices_months">
     <option>Бүх сар</option>
     <option>1</option>
     <option>2</option>
@@ -55,7 +55,7 @@
   </select>
 </div>
 <div style="float: right;" class="form-group">
-  <select disabled id="filter_choices" class="form-control devices_choice">
+  <select id="filter_choices" class="form-control filter_choice">
     <option>Сар</option>
     <option>Өдөр</option>
     <option>Өнөөдөр</option>
@@ -63,7 +63,6 @@
 </div>
 <div style="float: right;" class="form-group">
   <select id="devices" class="form-control devices_choice">
-    <option>Бүх төхөөрөмж</option>
     {% for item in request.user.id|getCurrentUserDevices %}
         <option>{{item}}</option>
     {% endfor %}
