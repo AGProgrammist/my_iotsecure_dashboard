@@ -122,7 +122,10 @@
   <script type="text/javascript">
     var myLineChart;
     var ctx = document.getElementById("myAreaChart");
-    var selectedDevice;
+    var selectedDevice;       /* Төхөөрөмжийн код*/
+    var selectedFilterChoice; /* Сар, өдөр, өнөөдөр*/
+    var selectedMonth;        /* 1 - 12*/
+    var selectedDay;          /* 1 - 30*/
 
     (function(window){
     	window.htmlentities = {
@@ -163,7 +166,7 @@
       $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл сараар"
       selectedDevice = $("select.devices_choice").children("option:selected").val();
 
-      myLineChart = new Chart(ctx, {
+       myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
@@ -223,101 +226,82 @@
           }
         }
       });
-      function alertMonth(){
-        myLineChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
-            datasets: [{
-              label: "Төхөөрөмж",
-              lineTension: 0.3,
-              backgroundColor: "rgba(2,117,216,0.2)",
-              borderColor: "rgba(2,117,216,1)",
-              pointRadius: 5,
-              pointBackgroundColor: "rgba(2,117,216,1)",
-              pointBorderColor: "rgba(255,255,255,0.8)",
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: "rgba(2,117,216,1)",
-              pointHitRadius: 20,
-              pointBorderWidth: 2,
-              data: [JSON.parse(('{{request.user|getAlertCountCustom:"all,1"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,2"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,3"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,4"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,5"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,6"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,7"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,8"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,9"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,10"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,11"}}').replace(/&quot;/g,'"'))[selectedDevice],
-                    JSON.parse(('{{request.user|getAlertCountCustom:"all,12"}}').replace(/&quot;/g,'"'))[selectedDevice]],
-            }],
-          },
-          options: myLineChart.options
-        });
-      }
-      // Сар, тухайн өдөр
-      // Төхөөрөмж эсвэл Хэрэглэгч
+
+      // Төхөөрөмжийн код сонгох
       $(document).ready(function(){
         $("select.devices_choice").change(function(){
-            var selectedChoice = $(this).children("option:selected").val();
-            if(selectedChoice === "Сар") {
-              $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл сараар"
-              alertMonth()
-            } else if (selectedChoice === "Өдөр") {
-              $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл өдрөөр"
-              myLineChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                  labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
-                  datasets: [{
-                    label: "Анхааруулга",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(2,117,216,0.2)",
-                    borderColor: "rgba(2,117,216,1)",
-                    pointRadius: 5,
-                    pointBackgroundColor: "rgba(2,117,216,1)",
-                    pointBorderColor: "rgba(255,255,255,0.8)",
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
-                    pointHitRadius: 20,
-                    pointBorderWidth: 2,
-                    data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
-                          {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
-                  }],
-                },
-                options: myLineChart.options
-              });
-            } else if (selectedChoice === "Өнөөдөр") {
-              myLineChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                  labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
-                  datasets: [{
-                    label: "Анхааруулга",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(2,117,216,0.2)",
-                    borderColor: "rgba(2,117,216,1)",
-                    pointRadius: 5,
-                    pointBackgroundColor: "rgba(2,117,216,1)",
-                    pointBorderColor: "rgba(255,255,255,0.8)",
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
-                    pointHitRadius: 20,
-                    pointBorderWidth: 2,
-                    data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
-                          {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
-                  }],
-                },
-                options: myLineChart.options
-              });
-            }
+          selectedDevice = $(this).children("option:selected").val();
         });
       });
 
+      /*Сар, өдөр, өнөөдөр сонголт хийх*/
+      $("select.filter_choice").on("change", function(){
+        var selectedChoice = $(this).children("option:selected").val();
+        if(selectedChoice === "Сар") {
+          $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл сараар"
+            let myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+              datasets: [{
+                label: "Төхөөрөмж",
+                lineTension: 0.3,
+                backgroundColor: "rgba(2,117,216,0.2)",
+                borderColor: "rgba(2,117,216,1)",
+                pointRadius: 5,
+                pointBackgroundColor: "rgba(2,117,216,1)",
+                pointBorderColor: "rgba(255,255,255,0.8)",
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                pointHitRadius: 20,
+                pointBorderWidth: 2,
+                data: [JSON.parse(('{{request.user|getAlertCountCustom:"all,1"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,2"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,3"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,4"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,5"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,6"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,7"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,8"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,9"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,10"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,11"}}').replace(/&quot;/g,'"'))[selectedDevice],
+                      JSON.parse(('{{request.user|getAlertCountCustom:"all,12"}}').replace(/&quot;/g,'"'))[selectedDevice]],
+              }],
+            },
+            options: myLineChart.options
+          });
+        } else if (selectedChoice === "Өнөөдөр") {
+          $("#chart_title")[0].innerText = "Өнөөдөр ирсэн анхааруулга мэдэгдэл"
+          let myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: ["1 -р сар", "2 -р сар", "3 -р сар", "4 -р сар", "5 -р сар", "6 -р сар", "7 -р сар", "8 -р сар", "9 -р сар", "10 -р сар", "11 -р сар", "12 -р сар"],
+              datasets: [{
+                label: "Анхааруулга",
+                lineTension: 0.3,
+                backgroundColor: "rgba(2,117,216,0.2)",
+                borderColor: "rgba(2,117,216,1)",
+                pointRadius: 5,
+                pointBackgroundColor: "rgba(2,117,216,1)",
+                pointBorderColor: "rgba(255,255,255,0.8)",
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                pointHitRadius: 20,
+                pointBorderWidth: 2,
+                data: [{{"1"|getUserCount}}, {{"2"|getUserCount}}, {{"3"|getUserCount}}, {{"4"|getUserCount}}, {{"5"|getUserCount}}, {{"6"|getUserCount}}, {{"7"|getUserCount}},
+                      {{"8"|getUserCount}}, {{"9"|getUserCount}}, {{"10"|getUserCount}}, {{"11"|getUserCount}}, {{"12"|getUserCount}},],
+              }],
+            },
+            options: myLineChart.options
+          });
+        }
+      })
 
-    } else if($("#is_userstaff").attr('value') === 'admin') {
+
+
+
+    } else if($("#is_userstaff").attr('value') === 'admin') { // АДМИНИЙ ЭРХЭЭР НЭВТЭРСЭН БОЛ
       myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -367,7 +351,6 @@
           }
         }
       });
-
 
       // Төхөөрөмж эсвэл Хэрэглэгч
       $(document).ready(function(){
