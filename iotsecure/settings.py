@@ -94,8 +94,8 @@ DATABASES = {
         'NAME': 'iot_db',
         'USER': 'root',
         'PASSWORD': '12345',
-        'HOST': '206.189.115.51',
-        'PORT': '8000',
+        'HOST': 'localhost',
+        'PORT': '',
         'OPTIONS': {
             'charset' : 'utf8',
             'use_unicode' : True,
