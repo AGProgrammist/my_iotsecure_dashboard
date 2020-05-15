@@ -160,7 +160,7 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = STATIC_DIR
 
 # MEDIA DIR - SAVE profile picture and device image
 MEDIA_URL = '/media/'
