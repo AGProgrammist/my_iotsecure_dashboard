@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'phone_field',
     'bootstrap3',
-    'dashboard',
-    'accounts',
     'devices',
     'users',
+    'dashboard',
+    'accounts',
 ]
 
 MIDDLEWARE = [
