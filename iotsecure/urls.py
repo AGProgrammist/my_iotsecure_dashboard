@@ -19,9 +19,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from . import views
 
+app_name = "iotsecure"
+
 urlpatterns = [
     path('', views.HomePage.as_view(), name="home"),
-    path('admin/', admin.site.urls, name='admin'),
+    path('admin/', admin.site.urls, name="admin"),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('accounts/', include('accounts.urls', namespace="accounts")),
     path('accounts/', include('django.contrib.auth.urls')),
