@@ -25,9 +25,9 @@ MEDIA_DIR = os.path.join(BASE_DIR, "media")
 SECRET_KEY = '+7ot_$tou)bk^^iid47a-x54qpu(@#f665_pz_v5+5alzn-vcz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['134.122.25.243', 'localhost', 'www.iotsecure.xyz', 'iotsecure.xyz']
+# DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = ['localhost', '134.122.25.243', 'www.iotsecure.xyz', 'iotsecure.xyz']
 
 # Application definition
 
@@ -170,3 +170,11 @@ MEDIA_ROOT = MEDIA_DIR
 LOGIN_REDIRECT_URL = "dashboard:home"
 LOGOUT_REDIRECT_URL = "accounts:login"
 LOGIN_URL = 'accounts:login'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'iotsecure.xyz@gmail.com'
+# EMAIL_HOST_PASSWORD = '99522550'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = '<noreply@iotsecure.xyz>'
