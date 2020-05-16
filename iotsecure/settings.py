@@ -93,8 +93,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'iot_db',
         'USER': 'root',
-        'PASSWORD': '12345',
-        'HOST': 'localhost',
+        'PASSWORD': 'HelloAG2015AG',
+        'HOST': '',
         'PORT': '',
         'OPTIONS': {
             'charset' : 'utf8',
