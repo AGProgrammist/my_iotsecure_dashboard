@@ -109,7 +109,12 @@
           {% include "includes/customer_user_filter.html" %}
         {% endif %}
       </div>
-     <canvas id="myAreaChart" width="100%" height="30" style="margin:45px 0 15px 0;"></canvas>
+      {% if request.user.is_staff == False %}
+        <canvas id="myAreaChart" width="100%" height="30" style="margin:45px 0 15px 0;"></canvas>
+      {% else %}
+        <canvas id="userAreaChart" width="100%" height="30" style="margin:45px 0 15px 0;"></canvas>
+        <canvas id="deviceAreaChart" width="100%" height="30" style="margin:45px 0 15px 0;"></canvas>
+      {% endif %}
     </div>
   </div>
   <!-- /.container-fluid-->
@@ -165,7 +170,6 @@
 
       $("#chart_title")[0].innerText = "Анхааруулга мэдэгдэл сараар"
       selectedDevice = $("select.devices_choice").children("option:selected").val();
-
        myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -302,6 +306,9 @@
 
 
     } else if($("#is_userstaff").attr('value') === 'admin') { // АДМИНИЙ ЭРХЭЭР НЭВТЭРСЭН БОЛ
+      let ctx = document.getElementById("userAreaChart");
+      $("#userAreaChart").show();
+      $("#deviceAreaChart").hide();
       myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -355,9 +362,12 @@
       // Төхөөрөмж эсвэл Хэрэглэгч
       $(document).ready(function(){
         $("select.choice").change(function(){
+            let ctx = document.getElementById("deviceAreaChart");
             var selectedChoice = $(this).children("option:selected").val();
             if(selectedChoice === "Төхөөрөмж") {
               $("#chart_title")[0].innerText = "Бүртгэлтэй төхөөрөмжүүд"
+              $("#userAreaChart").hide();
+              $("#deviceAreaChart").show();
               myLineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -382,6 +392,8 @@
               });
             } else if (selectedChoice === "Хэрэглэгч") {
               $("#chart_title")[0].innerText = "Бүртгэлтэй хэрэглэгчид"
+              $("#userAreaChart").show();
+              $("#deviceAreaChart").hide();
               myLineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
