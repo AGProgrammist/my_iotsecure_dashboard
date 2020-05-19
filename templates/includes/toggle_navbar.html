@@ -16,9 +16,15 @@
     </li>
 {% if request.user.is_staff == False %}
   <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Зурвасууд">
-    <a class="nav-link" href="messages.html">
+    <a class="nav-link" href="{% url "users:messages" %}">
       <i class="fa fa-fw fa-envelope-open"></i>
       <span class="nav-link-text">Зурвасууд</span>
+    </a>
+  </li>
+  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Зурвасууд">
+    <a class="nav-link" href="{% url "users:alerts"%}">
+      <i class="fa fa-fw fa-envelope-open"></i>
+      <span class="nav-link-text">Анхааруулга мэдэгдлүүд</span>
     </a>
   </li>
 {% endif %}

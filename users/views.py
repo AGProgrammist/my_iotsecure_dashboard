@@ -89,6 +89,18 @@ def delete_user_view(request):
 def update_user_view(request):
     pass
 
+class UserMessageView(LoginRequiredMixin, generic.ListView):
+    def get_queryset(self):
+        print("USERNAME: " + self.request.user.username)
+        return self.request.user
+    template_name = "users/messages.html"
+
+class UserAlertView(LoginRequiredMixin, generic.ListView):
+    def get_queryset(self):
+        print("USERNAME: " + self.request.user.username)
+        return self.request.user
+    template_name = "users/alerts.html"
+
 # class CreateUserView(LoginRequiredMixin, generic.CreateView):
 #     template_name = "users/create2.html"
 #     form_class = u_forms.UserCreateForm

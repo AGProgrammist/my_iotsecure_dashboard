@@ -26,7 +26,7 @@ TIME_ZONE = 'Asia/Ulaanbaatar'
 SECRET_KEY = '+7ot_$tou)bk^^iid47a-x54qpu(@#f665_pz_v5+5alzn-vcz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 # DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['localhost', '134.122.25.243', 'www.iotsecure.xyz', 'iotsecure.xyz']
 

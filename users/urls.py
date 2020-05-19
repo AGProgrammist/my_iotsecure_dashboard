@@ -7,4 +7,6 @@ urlpatterns = [
     path('create/', views.create_user_profile, name='user_create'),
     path('delete/', views.delete_user_view, name="delete"),
     path('update/', views.update_user_view, name="update"),
+    path('messages/', views.UserMessageView.as_view(), name="messages"),
+    path('alerts/', views.UserAlertView.as_view(), name="alerts"),
 ]
