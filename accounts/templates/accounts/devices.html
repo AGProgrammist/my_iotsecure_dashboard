@@ -219,6 +219,18 @@
                   }
               }
           });
+        } else {
+          $.confirm({
+              title: 'Амжилттай',
+              type: 'green',
+              content: response["message"],
+              typeAnimated: true,
+              buttons: {
+                  ok: {
+                      btnClass: 'btn-green'
+                  }
+              }
+          });Амжилттай
         }
       });
     }

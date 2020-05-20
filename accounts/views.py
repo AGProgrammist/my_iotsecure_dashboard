@@ -96,9 +96,10 @@ def remote_device(request):
         device = models.Device.objects.filter(code=dict_data["code"])
         deviceAndCommand = models.DeviceAndCommand(command_id=dict_data["id"], device_id="")
         #Үргэлжлүүлэх
+        response = {"message": "Комманд амжилттай", "error": False}
         return JsonResponse(response, safe=False)
     except:
-        response = {"message": "Оруулсан өгөгдлөө шалгана уу!", "error": True}
+        response = {"message": "Оролдлого амжилтгүй уу!", "error": True}
         return JsonResponse(response, safe=False)
 
 class MyDevicesList(LoginRequiredMixin, generic.ListView): # REPLACE TO ListView
