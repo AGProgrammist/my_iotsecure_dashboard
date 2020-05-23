@@ -171,8 +171,8 @@ class DeviceAndCommand(models.Model):
     """
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     command = models.ForeignKey(Command, on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(default=datetime.now)
-
+    created_at = models.DateTimeField(default=datetime.now, null=True, blank=True)
+    isEnable = models.BooleanField(default=True, null=True, blank=True) #ADDED 2020-05-23, 09:54PM
     def __str__(self):
         return "{} -ийн {} команд: {}".format(self.device.code, self.command.name, self.created_at)
 
