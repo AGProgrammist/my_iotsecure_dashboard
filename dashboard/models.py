@@ -146,7 +146,9 @@ class Device(TimeStampedModel):
     type = models.ForeignKey(DeviceTypeRef, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to='images/device_pictures', default='images/default_device.png')
+    deleted = models.BooleanField(null=True, blank=True, default=False)
     access_token = models.CharField(max_length=255, null=True, blank=True)
+    isActive = models.BooleanField(null=True, blank=True)
     def __str__(self):
         return "{} - {}, Идэвхгүй: {}, Эзэмшигч: {}".format(self.type.name, self.name, self.deleted, self.owner)
 
