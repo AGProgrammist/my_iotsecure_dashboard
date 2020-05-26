@@ -15,6 +15,7 @@ from . import forms as u_forms
 from accounts import forms as a_forms
 from django.views.decorators.csrf import csrf_exempt
 from dashboard import models
+from django.db.models import Q
 
 # USER ROLE - PERMISSION
 from dashboard.decorators import admin_only
@@ -95,11 +96,39 @@ class UserMessageView(LoginRequiredMixin, generic.ListView):
         return self.request.user
     template_name = "users/messages.html"
 
+    def get_context_data(self, **kwargs):
+        notiflist = []
+        context = super().get_context_data(**kwargs)
+        devices =  models.Device.objects.filter(owner=self.request.user).all()
+        for item in devices:
+            notif = models.DeviceAndNotification.objects.filter(device=item).all()
+            if type(notif.first()).__name__ != "NoneType":
+                if notif.first().notification.color == "Blue" or notif.first().notification.color == "Green" or notif.first().notification.color == "Orange" or notif.first().notification.color == "Yellow":
+                    notiflist.append(notif.first())
+        print(notiflist)
+        context["devices"] = devices
+        context["notifications"] = notiflist
+        return context
+
+
 class UserAlertView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         print("USERNAME: " + self.request.user.username)
         return self.request.user
     template_name = "users/alerts.html"
+
+    def get_context_data(self, **kwargs):
+        notiflist = []
+        context = super().get_context_data(**kwargs)
+        devices =  models.Device.objects.filter(owner=self.request.user).all()
+        for item in devices:
+            notif = models.DeviceAndNotification.objects.filter(device=item).all()
+            if type(notif.first()).__name__ != "NoneType":
+                if notif.first().notification.color == "Red":
+                    notiflist.append(notif.first())
+        print(notiflist)
+        context["notifications"] = notiflist
+        return context
 
 # class CreateUserView(LoginRequiredMixin, generic.CreateView):
 #     template_name = "users/create2.html"

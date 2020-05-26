@@ -21,6 +21,22 @@
 		<div class="box_general">
 			<div class="header_box">
 				<h2 class="d-inline-block">Зурвас</h2>
+        {% for item in notifications %}
+          <div class="list_general" style="color: {{item.notification.color}}">
+    				<ul>
+    					<li>
+    						<figure><img src="img/item_1.jpg" alt=""></figure>
+    						<small>Төхөөрөмж</small>
+    						<h4>{{item.device.code}}</h4>
+    						<p>{{item.notification.name}}</p>
+    						<!--<p><a href="#0" class="btn_1 gray"><i class="fa fa-fw fa-eye"></i> View item</a></p>-->
+    						<ul class="buttons">
+    							<li><a href="#0" class="btn_1 gray delete wishlist_close"><i class="fa fa-fw fa-times-circle-o"></i> Устгах</a></li>
+    						</ul>
+    					</li>
+    				</ul>
+    			</div>
+        {% endfor %}
 				<!--<div class="filter">
 					<select name="orderby" class="selectbox">
 						<option value="Any time">Any time</option>
@@ -28,20 +44,6 @@
 						<option value="Oldest">Oldest</option>
 					</select>
 				</div> -->
-			</div>
-			<div class="list_general">
-				<ul>
-					<li>
-						<figure><img src="img/item_1.jpg" alt=""></figure>
-						<small>Төхөөрөмж</small>
-						<h4>D20051500001</h4>
-						<p>Байдал хэвийн</p>
-						<!--<p><a href="#0" class="btn_1 gray"><i class="fa fa-fw fa-eye"></i> View item</a></p>-->
-						<ul class="buttons">
-							<li><a href="#0" class="btn_1 gray delete wishlist_close"><i class="fa fa-fw fa-times-circle-o"></i> Устгах</a></li>
-						</ul>
-					</li>
-				</ul>
 			</div>
 		</div>
 		<!-- /box_general-->
