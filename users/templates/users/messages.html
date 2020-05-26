@@ -25,14 +25,15 @@
           <div class="list_general" style="color: {{item.notification.color}}">
     				<ul>
     					<li>
-    						<figure><img src="img/item_1.jpg" alt=""></figure>
-    						<small>Төхөөрөмж</small>
+    						<figure><img src="{{item.device.image.url}}" alt="Зураггүй..."></figure>
+    						<small>Төхөөрөмж - {{item.notification.name}}</small>
     						<h4>{{item.device.code}}</h4>
-    						<p>{{item.notification.name}}</p>
+    						<p>{{item.msg}}</p>
     						<!--<p><a href="#0" class="btn_1 gray"><i class="fa fa-fw fa-eye"></i> View item</a></p>-->
     						<ul class="buttons">
     							<li><a href="#0" class="btn_1 gray delete wishlist_close"><i class="fa fa-fw fa-times-circle-o"></i> Устгах</a></li>
     						</ul>
+                <small style="color: black">{{item.created_at}}</small>
     					</li>
     				</ul>
     			</div>

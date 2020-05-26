@@ -92,7 +92,6 @@ def update_user_view(request):
 
 class UserMessageView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
-        print("USERNAME: " + self.request.user.username)
         return self.request.user
     template_name = "users/messages.html"
 
@@ -103,9 +102,13 @@ class UserMessageView(LoginRequiredMixin, generic.ListView):
         for item in devices:
             notif = models.DeviceAndNotification.objects.filter(device=item).all()
             if type(notif.first()).__name__ != "NoneType":
-                if notif.first().notification.color == "Blue" or notif.first().notification.color == "Green" or notif.first().notification.color == "Orange" or notif.first().notification.color == "Yellow":
-                    notiflist.append(notif.first())
-        print(notiflist)
+                if len(notif) > 1:
+                    for notfItem in notif:
+                        if notif.first().notification.color == "Blue" or notif.first().notification.color == "Green" or notif.first().notification.color == "Orange" or notif.first().notification.color == "Yellow":
+                            notiflist.append(notif.first())
+                else:
+                    if notif.first().notification.color == "Blue" or notif.first().notification.color == "Green" or notif.first().notification.color == "Orange" or notif.first().notification.color == "Yellow":
+                        notiflist.append(notif.first())
         context["devices"] = devices
         context["notifications"] = notiflist
         return context
@@ -113,7 +116,6 @@ class UserMessageView(LoginRequiredMixin, generic.ListView):
 
 class UserAlertView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
-        print("USERNAME: " + self.request.user.username)
         return self.request.user
     template_name = "users/alerts.html"
 
@@ -122,10 +124,15 @@ class UserAlertView(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         devices =  models.Device.objects.filter(owner=self.request.user).all()
         for item in devices:
-            notif = models.DeviceAndNotification.objects.filter(device=item).all()
+            notif = models.DeviceAndNotification.objects.filter(device=item).all().order_by("-created_at")
             if type(notif.first()).__name__ != "NoneType":
-                if notif.first().notification.color == "Red":
-                    notiflist.append(notif.first())
+                if (len(notif) > 1):
+                    for notfItem in notif:
+                        if notfItem.notification.color == "Red":
+                            notiflist.append(notfItem)
+                else:
+                    if notif.first().notification.color == "Red":
+                        notiflist.append(notif.first())
         print(notiflist)
         context["notifications"] = notiflist
         return context
