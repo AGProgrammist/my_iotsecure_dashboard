@@ -15,13 +15,13 @@
       </a>
     </li>
 {% if request.user.is_staff == False %}
-  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Зурвасууд">
+  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Мэдэгдэл">
     <a class="nav-link" href="{% url "users:messages" %}">
       <i class="fa fa-fw fa-envelope-open"></i>
       <span class="nav-link-text">Зурвасууд</span>
     </a>
   </li>
-  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Зурвасууд">
+  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Анхааруулга зурвас">
     <a class="nav-link" href="{% url "users:alerts"%}">
       <i class="fa fa-fw fa-envelope-open"></i>
       <span class="nav-link-text">Анхааруулга мэдэгдлүүд</span>
