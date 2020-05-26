@@ -27,7 +27,6 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
         context['pchange_form'] = PasswordChangeForm(self.model)
         return context
 
-
 @login_required()
 def update_profile(request):
     if request.method == "POST":
@@ -92,14 +91,34 @@ def remote_device(request):
     if request.method == "POST":
         data = request.POST.get("data")
         dict_data=json.loads(data)
+        ucommand = models.Command.objects.filter(code=dict_data["command"]).first()
+        uuser = User.objects.filter(id=dict_data["user_id"]).first()
+        device = models.Device.objects.filter(code=dict_data["code"]).first()
+        print(type(ucommand))
+        print(type(uuser))
     try:
-        device = models.Device.objects.filter(code=dict_data["code"])
-        deviceAndCommand = models.DeviceAndCommand(command_id=dict_data["id"], device_id="")
+        if dict_data["command"] == "devOn":
+            models.Device.objects.filter(code=str(dict_data["code"])).update(isActive=True)
+            newCommandExec = models.UserAndCommand(command=ucommand, user=uuser)
+            newDeviceCommand = models.DeviceAndCommand(command=ucommand, device=device)
+            newCommandExec.save()
+            newDeviceCommand.save()
+        elif dict_data["command"] == "deOff":
+            models.Device.objects.filter(code=str(dict_data["code"])).update(isActive=False)
+            newCommandExec = models.UserAndCommand(command=ucommand, user=uuser)
+            newDeviceCommand = models.DeviceAndCommand(command=ucommand, device=device)
+            newCommandExec.save()
+            newDeviceCommand.save()
+        else:
+            newCommandExec = models.UserAndCommand(command=ucommand, user=uuser)
+            newDeviceCommand = models.DeviceAndCommand(command=ucommand, device=device)
+            newCommandExec.save()
+            newDeviceCommand.save()
         #Үргэлжлүүлэх
-        response = {"message": "Комманд амжилттай", "error": False}
+        response = {"message": "{} комманд амжилттай".format(ucommand.name), "error": False}
         return JsonResponse(response, safe=False)
     except:
-        response = {"message": "Оролдлого амжилтгүй уу!", "error": True}
+        response = {"message": "Оролдлого амжилтгүй!", "error": True}
         return JsonResponse(response, safe=False)
 
 class MyDevicesList(LoginRequiredMixin, generic.ListView): # REPLACE TO ListView

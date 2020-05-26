@@ -92,7 +92,7 @@
           <td colspan="2" style="text-align: center;">
             <div class="light_on_off" style="text-align: center;">
               <label class="rocker rocker-small">
-                <input onchange="alertClicked()" id="alert" type="checkbox" />
+                <input onchange="deviceOnOff()" id="devPower" type="checkbox" />
                 <span id="deviceOff" class="switch-left">ON</span>
                 <span id="deviceOff" class="switch-right">OFF</span>
               </label>
@@ -119,7 +119,7 @@
           <td>
             <div class="light_on_off" style="text-align: center;">
               <label class="rocker rocker-small">
-                <input onchange="alertClicked()" id="alert" type="checkbox" />
+                <input id="alert" onchange="alertClicked()" type="checkbox" />
                 <span id="alertOff" class="switch-left">ON</span>
                 <span id="alertOn" class="switch-right">OFF</span>
               </label>
@@ -179,22 +179,20 @@
       });
     })
 
-    function alertClicked(){
-      if ($("#alert").prop('checked')) {
-        console.log("Дохиолол аслаа!");
+    function deviceOnOff(){
+      if ($("#devPower").prop("checked")) {
+        console.log("Төхөөрөмж асаах");
         json_data = {
           "code": dev_code,
-          "command": "ON",
-          "type": "alert",
-          "id": "cm_si" // SIGNAL
-        };
+          "command": "devOn",
+          "user_id": {{request.user.id}}
+        }
       } else {
-        console.log("Дохиолол унтарлаа");
+        console.log("Төхөөрөмж унтраах");
         json_data = {
           "code": dev_code,
-          "command": "OFF",
-          "type": "light",
-          "id": "cm_si" // SIGNAL
+          "command": "deOff",
+          "user_id": {{request.user.id}}
         }
       }
 
@@ -230,17 +228,117 @@
                       btnClass: 'btn-green'
                   }
               }
-          });Амжилттай
+          });
+        }
+      });
+    }
+
+    function alertClicked(){
+      if ($("#alert").prop('checked')) {
+        console.log("Дохиолол аслаа!");
+        json_data = {
+          "code": dev_code,
+          "command": "siON",
+          "user_id": {{request.user.id}}
+        };
+      } else {
+        console.log("Дохиолол унтарлаа");
+        json_data = {
+          "code": dev_code,
+          "command": "siOFF",
+          "user_id": {{request.user.id}}
+        }
+      }
+
+      var string_data = JSON.stringify(json_data);
+      // SEND JSON DATA
+      $.ajax({
+        url: '{% url "accounts:remote_device" %}',
+        type: "POST",
+        data: {data: string_data, csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()}
+      })
+      .done(function(response){
+        // Төхөөрөмжид комманд өгөх үед алдаа үүсвэл хэрэглэгчид мэдэгдэл
+        if (response["error"] == true) {
+          $.confirm({
+              title: 'Алдаа',
+              type: 'red',
+              content: response["message"],
+              typeAnimated: true,
+              buttons: {
+                  ok: {
+                      btnClass: 'btn-red'
+                  }
+              }
+          });
+        } else {
+          $.confirm({
+              title: 'Амжилттай',
+              type: 'green',
+              content: response["message"],
+              typeAnimated: true,
+              buttons: {
+                  ok: {
+                      btnClass: 'btn-green'
+                  }
+              }
+          });
         }
       });
     }
 
     function lightClicked(){
-      if($("#light").prop('checked')) {
-        console.log("Гэрэл аслаа");
+      if ($("#light").prop('checked')) {
+        console.log("Гэрэл аслаа!");
+        json_data = {
+          "code": dev_code,
+          "command": "liON",
+          "user_id": {{request.user.id}}
+        };
       } else {
         console.log("Гэрэл унтарлаа");
+        json_data = {
+          "code": dev_code,
+          "command": "liOFF",
+          "user_id": {{request.user.id}}
+        }
       }
+
+      var string_data = JSON.stringify(json_data);
+      // SEND JSON DATA
+      $.ajax({
+        url: '{% url "accounts:remote_device" %}',
+        type: "POST",
+        data: {data: string_data, csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()}
+      })
+      .done(function(response){
+        // Төхөөрөмжид комманд өгөх үед алдаа үүсвэл хэрэглэгчид мэдэгдэл
+        if (response["error"] == true) {
+          $.confirm({
+              title: 'Алдаа',
+              type: 'red',
+              content: response["message"],
+              typeAnimated: true,
+              buttons: {
+                  ok: {
+                      btnClass: 'btn-red'
+                  }
+              }
+          });
+        } else {
+          $.confirm({
+              title: 'Амжилттай',
+              type: 'green',
+              content: response["message"],
+              typeAnimated: true,
+              buttons: {
+                  ok: {
+                      btnClass: 'btn-green'
+                  }
+              }
+          });
+        }
+      });
     }
   </script>
   <script type="text/javascript">

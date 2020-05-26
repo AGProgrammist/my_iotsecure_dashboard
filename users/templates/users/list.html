@@ -43,7 +43,7 @@
                 <th>Имэйл</th>
                 <th>Гэрийн хаяг</th>
                 <th>Үүсгэсэн огноо</th>
-                <th></th>
+                <!--<th></th>-->
                 <th></th>
               </tr>
             </thead>
@@ -81,9 +81,9 @@
                   <td>{{user.email}}</td>
                   <td>{{user.profile.address}}</td>
                   <td>{{user.profile.created_at}}</td>
-                  <td style="text-align: center; padding: 30px 30px 30px 30px;">
+                  <!--<td style="text-align: center; padding: 30px 30px 30px 30px;">
                       <button class="btn btn-warning btn-sm">Засах</button>
-                  </td>
+                  </td>-->
                   <td style="text-align: center; padding: 30px 30px 30px 30px;">
                     <form style="display: inline-block;" action="{% url 'users:delete' %}" id="{{user.id}}" method="POST">
                       {% csrf_token %}

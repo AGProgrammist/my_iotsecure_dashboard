@@ -11,7 +11,7 @@ class CreateDeviceForm(forms.ModelForm):
             'name': _('Нэр *'),
             'type': _('Төрөл *'),
             'owner': _('Эзэмшигч'),
-            'image': _('Төхөөрөмжийн зураг'),
+            'image': _('Төхөөрөмжийн зураг')
         }
 
 class UpdateDeviceForm(forms.ModelForm):
