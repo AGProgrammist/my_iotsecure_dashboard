@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from datetime import datetime
 from dashboard.models import Device, DeviceAndNotification
 import json
+from django.db.models import Q
 
 User = get_user_model()
 register = template.Library()
@@ -183,7 +184,7 @@ def getCommonMsgCount(u_id):
     devices = Device.objects.filter(owner_id = int(u_id))
     for item in devices:
         # id = 2
-        alert = DeviceAndNotification.objects.filter(device_id=item.code, notification_id=2)
+        alert = DeviceAndNotification.objects.filter(Q(device_id=item.code), Q(notification_id=2) | Q(notification_id=3) | Q(notification_id=4))
         counter = counter + len(alert)
     return counter
 
