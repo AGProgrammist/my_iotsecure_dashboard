@@ -104,10 +104,10 @@ class UserMessageView(LoginRequiredMixin, generic.ListView):
             if type(notif.first()).__name__ != "NoneType":
                 if len(notif) > 1:
                     for notfItem in notif:
-                        if notif.first().notification.color == "Blue" or notif.first().notification.color == "Green" or notif.first().notification.color == "Orange" or notif.first().notification.color == "Yellow":
+                        if notif.first().notification.color == "Blue" or notif.first().notification.color == "Green" or notif.first().notification.color == "Orange" or notif.first().notification.color == "Orange":
                             notiflist.append(notif.first())
                 else:
-                    if notif.first().notification.color == "Blue" or notif.first().notification.color == "Green" or notif.first().notification.color == "Orange" or notif.first().notification.color == "Yellow":
+                    if notif.first().notification.color == "Blue" or notif.first().notification.color == "Green" or notif.first().notification.color == "Orange" or notif.first().notification.color == "Orange":
                         notiflist.append(notif.first())
         context["devices"] = devices
         context["notifications"] = notiflist
