@@ -26,7 +26,7 @@ TIME_ZONE = 'Asia/Ulaanbaatar'
 SECRET_KEY = '+7ot_$tou)bk^^iid47a-x54qpu(@#f665_pz_v5+5alzn-vcz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 # DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['localhost', '134.122.25.243', 'www.iotsecure.xyz', 'iotsecure.xyz']
 
@@ -62,7 +62,7 @@ MIDDLEWARE = [
     #'iotsecure.middleware.AutoLogout',
 ]
 
-SESSION_EXPIRE_SECONDS = 300      # 300 seconds = 5 minutes
+SESSION_EXPIRE_SECONDS = 1200      # 1200 seconds = 20 minutes
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 
 ROOT_URLCONF = 'iotsecure.urls'
