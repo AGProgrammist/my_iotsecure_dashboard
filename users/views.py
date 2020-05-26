@@ -137,6 +137,16 @@ class UserAlertView(LoginRequiredMixin, generic.ListView):
         context["notifications"] = notiflist
         return context
 
+def delete_notif_alert(request, pk):
+    object = models.DeviceAndNotification.objects.get(pk=pk)
+    object.delete()
+    return redirect("users:alerts")
+
+def delete_notif_common(request, pk):
+    object = models.DeviceAndNotification.objects.get(pk=pk)
+    object.delete()
+    return redirect("users:messages")
+
 # class CreateUserView(LoginRequiredMixin, generic.CreateView):
 #     template_name = "users/create2.html"
 #     form_class = u_forms.UserCreateForm

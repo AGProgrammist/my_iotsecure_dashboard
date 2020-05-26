@@ -9,4 +9,6 @@ urlpatterns = [
     path('update/', views.update_user_view, name="update"),
     path('messages/', views.UserMessageView.as_view(), name="messages"),
     path('alerts/', views.UserAlertView.as_view(), name="alerts"),
+    path('delete_a/<int:pk>', views.delete_notif_alert, name="deleteAlert"),
+    path('delete_c/<int:pk>', views.delete_notif_common, name="deleteCommon"),
 ]
