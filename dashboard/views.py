@@ -24,26 +24,29 @@ class DashboardHomeView(LoginRequiredMixin, TemplateView):
     #     context['count_devices'] = (len(self.device_list))
     #     return context
 
-# def getDeviceAlertCountMonth(request):
-#     if request.method == "POST":
-#         data = request.POST.get("data")
-#         dict_data=json.loads(data)
-#         today = datetime.now()
-#
-#         try:
-#             counter = 0
-#             devices = models.Device.objects.filter(code=dict_data["dev_code"])
-#
-#             # Сар бүрийн анхааруулга мэдэгдэл
-#             if (dict_data["type"] == "all"):
-#                 for item in devices:
-#                     # Анхааруулга мэдэгдлийн id = 1
-#                     # Тухайн төхөөрөмжөөс ирсэн анхааруулга мэдэгдэлийг шүүх
-#                     alert = models.DeviceAndNotification.objects.raw("SELECT MONTH(created_at), COUNT(device_id) as num FROM dashboard.DeviceAndNotification AS dale "
-#                                                                      + " device_id = " + item.code + " YEAR(created_at) = "
-#                                                                      + today.year + " GROUP BY MONTH(created_at)")
-#                     alert = models.DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
-#                     today = datetime.now()
+def getDeviceAlertCountMonth(request):
+    if request.method == "POST":
+        data = request.POST.get("data")
+        dict_data=json.loads(data)
+        print(dict_data)
+        today = datetime.now()
+        print("helloWHEHEHJKHJKRHJKHJKHJKHKHKJHKHK")
+        try:
+            counter = 0
+            devices = models.Device.objects.filter(code=dict_data["dev_code"])
 
-#                    if alert.created_at.year == today.year and alert:
-#                        counter = counter + len(alert)
+            # Сар бүрийн анхааруулга мэдэгдэл
+            if (dict_data["type"] == "all"):
+                for item in devices:
+                    # Анхааруулга мэдэгдлийн id = 1
+                    # Тухайн төхөөрөмжөөс ирсэн анхааруулга мэдэгдэлийг шүүх
+                    alert = models.DeviceAndNotification.objects.raw("SELECT MONTH(created_at), COUNT(device_id) as num FROM dashboard.DeviceAndNotification AS dale "
+                                                                     + " device_id = " + item.code + " YEAR(created_at) = "
+                                                                     + today.year + " GROUP BY MONTH(created_at)")
+                    alert = models.DeviceAndNotification.objects.filter(device_id=item.code, notification_id=1)
+                    today = datetime.now()
+
+                    if alert.created_at.year == today.year and alert != None:
+                       counter = counter + len(alert)
+        except:
+            pass

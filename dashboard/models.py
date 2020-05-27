@@ -79,6 +79,7 @@ class DeviceNotification(TimeStampedModel):
     GREEN = "Green"
     BLUE = "Blue"
     ORANGE = "Orange"
+    BLUE
 
     COLOR_CHOICES = [
         (RED, 'Улаан'),

@@ -25,3 +25,6 @@ print(r1_dict["success"])
 
 # ТӨХӨӨРӨМЖИЙН ХАМГИЙН СҮҮЛИЙН ГОРИМЫГ АВАХ
 #https://iotsecure.xyz:1880/getMode/devCode/:code
+
+# SMS Service
+# https://www.iotsecure.xyz:1880/sms/message/hello

@@ -1,7 +1,7 @@
 {% load my_extras %}
 
 <h2 id="chart_title"><i class="fa fa-bar-chart"></i></h2>
-<div style="float: right;" class="form-group">
+<!--<div style="float: right;" class="form-group">
   <select id="days" class="form-control devices_days">
     <option>Бүх өдөр</option>
     <option>1</option>
@@ -37,30 +37,30 @@
     <option>31</option>
   </select>
 </div>
+-->
 <div style="float: right;" class="form-group">
   <select id="months" class="form-control devices_months">
-    <option>Бүх сар</option>
-    <option>1</option>
-    <option>2</option>
-    <option>3</option>
-    <option>4</option>
-    <option>5</option>
-    <option>6</option>
-    <option>7</option>
-    <option>8</option>
-    <option>9</option>
-    <option>10</option>
-    <option>11</option>
-    <option>12</option>
+    <option>1-р сар</option>
+    <option>2-р сар</option>
+    <option>3-р сар</option>
+    <option>4-р сар</option>
+    <option>5-р сар</option>
+    <option>6-р сар</option>
+    <option>7-р сар</option>
+    <option>8-р сар</option>
+    <option>9-р сар</option>
+    <option>10-р сар</option>
+    <option>11-р сар</option>
+    <option>12-р сар</option>
   </select>
 </div>
-<div style="float: right;" class="form-group">
+<!--<div style="float: right;" class="form-group">
   <input type="text" placeholder="Он" class="form-control"/>
-  <!--<select id="filter_choices" class="form-control filter_choice">
+  <select id="filter_choices" class="form-control filter_choice">
     <option>Сар</option>
-    <option>Өнөөдөр</option> -->
+    <option>Өнөөдөр</option>
   </select>
-</div>
+</div> -->
 <div style="float: right;" class="form-group">
   <select id="devices" class="form-control devices_choice">
     {% for item in request.user.id|getCurrentUserDevices %}
