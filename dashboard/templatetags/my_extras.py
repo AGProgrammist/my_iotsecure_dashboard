@@ -184,7 +184,7 @@ def getCommonMsgCount(u_id):
     devices = Device.objects.filter(owner_id = int(u_id))
     for item in devices:
         # id = 2
-        alert = DeviceAndNotification.objects.filter(Q(device_id=item.code), Q(notification_id=2) | Q(notification_id=3) | Q(notification_id=4))
+        alert = DeviceAndNotification.objects.filter(Q(device_id=item.code), Q(notification_id=2) | Q(notification_id=3) | Q(notification_id=4) | Q(notification_id=5))
         counter = counter + len(alert)
     return counter
 
